@@ -1,0 +1,47 @@
+#showcase {
+  background-image: url("../../assets/images/pexels-photo-1550337.png");
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  position: relative;
+  .to-login {
+    position: absolute;
+    bottom: 10%;
+    button {
+      font-size: 2rem !important;
+    }
+  }
+}
+
+.info {
+  font-size: 1rem;
+}
+
+.home-container {
+  padding: 2rem 4rem;
+  #what {
+    padding: 2rem 12rem;
+  }
+}
+.icon {
+  color: rgb(255, 255, 255);
+}
+
+.info {
+  cursor: pointer;
+  transition: 0.5s;
+  &:hover {
+    color: white;
+  }
+}
+
+.right-content {
+  padding: 2rem 12rem;
+  transition: 0.5s;
+  &:hover {
+    color: white;
+  }
+}
+#contact{
+  padding: 2rem 20rem;
+}
