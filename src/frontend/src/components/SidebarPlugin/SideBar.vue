@@ -71,39 +71,39 @@ export default {
       type: Array,
       default: () => [
         {
-          path: '/dashboard',
+          path: '/icons',
           name: 'Dashboard',
           icon: 'ti-panel'
         },
         {
-          path: '/stats',
+          path: '/votes',
           name: 'Votes',
           icon: 'ti-package'
         },
         {
-          path: '/table-list',
+          path: '/voters',
           name: 'Voters',
           icon: 'ti-hand-open'
         },
         {
           path: '/positions',
-          name: 'Position',
+          name: 'Positions',
           icon: 'ti-id-badge'
         },
         {
-          path: '/icons',
+          path: '/candidates',
           name: 'Candidates',
           icon: 'ti-user'
         },
         {
-          path: '/maps',
+          path: '/ballotposition',
           name: 'Ballot Position',
-          icon: 'ti-panel'
+          icon: 'ti-layout-list-thumb'
         },
         {
-          path: '/notifications',
-          name: 'Election Title',
-          icon: 'ti-panel'
+          path: '/electionconfigure',
+          name: 'Election Configure',
+          icon: 'ti-settings'
         }
       ]
     },

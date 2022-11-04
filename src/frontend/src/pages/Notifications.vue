@@ -79,7 +79,6 @@
           <div class="col-md-3">
             <p-button round outline block @click.native="notifyVue('bottom', 'right')">Bottom Right</p-button>
           </div>
-
         </div>
       </div>
     </div>
