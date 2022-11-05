@@ -15,7 +15,7 @@ class Fabvote extends Contract {
         const admins = [
             {
                 email: 'admin@gmai.com',
-                password: 'admin'
+                password: 'adminpw'
             }
         ];
         const elections = [
@@ -25,6 +25,152 @@ class Fabvote extends Contract {
                 end_time: (new Date(new Date().getDate() + 1)).toLocaleString(),
                 active: false
             }
+        ];
+        const positions = [
+            {
+                id: 'POSITION05c4fe86-6269-11ed-9b6a-0242ac120002',
+                name: 'Đại biểu quốc hội khóa XV',
+                maximum: 3,
+            },
+            {
+                id: 'POSITION28d37c18-6269-11ed-9b6a-0242ac120002',
+                name: 'Đại biểu HĐND tỉnh Lai Châu',
+                maximum: 3,
+            }
+        ];
+        const candidates = [
+            {
+                id: 'CANDIDATEab290e12-6269-11ed-9b6a-0242ac120002',
+                name: 'Vo Thanh Vi',
+                positionId: 'POSITION05c4fe86-6269-11ed-9b6a-0242ac120002',
+                biography: 'Mot nguoi tot',
+                imageUrl: 'https://res.cloudinary.com/h-b-ch-khoa/image/upload/v1637342339/drfihj0p4ftfsrhmmtdr.png',
+            },
+            {
+                id: 'CANDIDATE40844e72-626a-11ed-9b6a-0242ac120002',
+                name: 'Ho Van Nam',
+                positionId: 'POSITION05c4fe86-6269-11ed-9b6a-0242ac120002',
+                biography: 'Mot nguoi tot',
+                imageUrl: 'https://res.cloudinary.com/h-b-ch-khoa/image/upload/v1637342339/drfihj0p4ftfsrhmmtdr.png',
+            },
+            {
+                id: 'CANDIDATE720eca27-43ba-4e75-90d4-f8e44f8999e4',
+                name: 'Dang Hoai Lam',
+                positionId: 'POSITION28d37c18-6269-11ed-9b6a-0242ac120002',
+                biography: 'Mot nguoi tot',
+                imageUrl: 'https://res.cloudinary.com/h-b-ch-khoa/image/upload/v1637342339/drfihj0p4ftfsrhmmtdr.png',
+            },
+            {
+                id: 'CANDIDATE07ba10b3-b370-491d-9094-d41fc421c6d0',
+                name: 'Vo Xuan Phuc',
+                positionId: 'POSITION28d37c18-6269-11ed-9b6a-0242ac120002',
+                biography: 'Mot nguoi tot',
+                imageUrl: 'https://res.cloudinary.com/h-b-ch-khoa/image/upload/v1637342339/drfihj0p4ftfsrhmmtdr.png',
+            },
+            {
+                id: 'CANDIDATE42ca8ce5-cab1-498f-ab88-d31c6c1e41fd',
+                name: 'Bao Doi',
+                positionId: 'POSITION05c4fe86-6269-11ed-9b6a-0242ac120002',
+                biography: 'Mot nguoi tot',
+                imageUrl: 'https://res.cloudinary.com/h-b-ch-khoa/image/upload/v1637342339/drfihj0p4ftfsrhmmtdr.png',
+            },
+            {
+                id: 'CANDIDATE7f7b209b-1524-4198-b6d4-1345ed1af062',
+                name: 'Le Lan Huong',
+                positionId: 'POSITION28d37c18-6269-11ed-9b6a-0242ac120002',
+                biography: 'Mot nguoi tot',
+                imageUrl: 'https://res.cloudinary.com/h-b-ch-khoa/image/upload/v1637342339/drfihj0p4ftfsrhmmtdr.png',
+            },
+            {
+                id: 'CANDIDATEdab39660-856d-40c1-a32d-a6707cb76fca',
+                name: 'Dang Thi Loan',
+                positionId: 'POSITION05c4fe86-6269-11ed-9b6a-0242ac120002',
+                biography: 'Mot nguoi tot',
+                imageUrl: 'https://res.cloudinary.com/h-b-ch-khoa/image/upload/v1637342339/drfihj0p4ftfsrhmmtdr.png',
+            },
+            {
+                id: 'CANDIDATE019ebac8-768f-4699-8225-904995c4fb4a',
+                name: 'Dang Trung Chau',
+                positionId: 'POSITION28d37c18-6269-11ed-9b6a-0242ac120002',
+                biography: 'Mot nguoi tot',
+                imageUrl: 'https://res.cloudinary.com/h-b-ch-khoa/image/upload/v1637342339/drfihj0p4ftfsrhmmtdr.png',
+            },
+        ];
+
+        const voters = [
+            {
+                id: "VOTERba6c2f71-a952-4310-9cb0-8a5d34672eb1",
+                name: "Le Van Thanh Nhan",
+                email: "nhanle@gmail.com",
+                password: "123123aa",
+                voted: false,
+            },
+            {
+                id: "VOTERfa966e44-b321-4955-88ac-797633288deb",
+                name: "Nghe Ca Cu",
+                email: "cunghe@gmail.com",
+                password: "123123aa",
+                voted: false,
+            },
+            {
+                id: "VOTER6e408fdb-ba57-42ca-b06a-6dd8f9c0b3e6",
+                name: "Hoa Nhan Thuy",
+                email: "hoathuy@gmail.com",
+                password: "123123aa",
+                voted: false,
+            },
+            
+        ];
+
+        const votes = [
+            {
+                positionId: 'POSITION28d37c18-6269-11ed-9b6a-0242ac120002',
+                ownerId: 'CANDIDATE019ebac8-768f-4699-8225-904995c4fb4a',
+            },
+            {
+                positionId: 'POSITION28d37c18-6269-11ed-9b6a-0242ac120002',
+                ownerId: 'CANDIDATE019ebac8-768f-4699-8225-904995c4fb4a',
+            },
+            {
+                positionId: 'POSITION28d37c18-6269-11ed-9b6a-0242ac120002',
+                ownerId: 'CANDIDATE019ebac8-768f-4699-8225-904995c4fb4a',
+            },
+            {
+                positionId: 'POSITION28d37c18-6269-11ed-9b6a-0242ac120002',
+                ownerId: 'CANDIDATE019ebac8-768f-4699-8225-904995c4fb4a',
+            },
+            {
+                positionId: 'POSITION28d37c18-6269-11ed-9b6a-0242ac120002',
+                ownerId: 'CANDIDATE019ebac8-768f-4699-8225-904995c4fb4a',
+            },
+            {
+                positionId: 'POSITION28d37c18-6269-11ed-9b6a-0242ac120002',
+                ownerId: 'CANDIDATE019ebac8-768f-4699-8225-904995c4fb4a',
+            },
+            {
+                positionId: 'POSITION05c4fe86-6269-11ed-9b6a-0242ac120002',
+                ownerId: 'CANDIDATE7f7b209b-1524-4198-b6d4-1345ed1af062',
+            },
+            {
+                positionId: 'POSITION05c4fe86-6269-11ed-9b6a-0242ac120002',
+                ownerId: 'CANDIDATE7f7b209b-1524-4198-b6d4-1345ed1af062',
+            },
+            {
+                positionId: 'POSITION05c4fe86-6269-11ed-9b6a-0242ac120002',
+                ownerId: 'CANDIDATE7f7b209b-1524-4198-b6d4-1345ed1af062',
+            },
+            {
+                positionId: 'POSITION05c4fe86-6269-11ed-9b6a-0242ac120002',
+                ownerId: 'CANDIDATE7f7b209b-1524-4198-b6d4-1345ed1af062',
+            },
+            {
+                positionId: 'POSITION05c4fe86-6269-11ed-9b6a-0242ac120002',
+                ownerId: 'CANDIDATE7f7b209b-1524-4198-b6d4-1345ed1af062',
+            },
+            {
+                positionId: 'POSITION05c4fe86-6269-11ed-9b6a-0242ac120002',
+                ownerId: 'CANDIDATE7f7b209b-1524-4198-b6d4-1345ed1af062',
+            },
         ]
         for (let i = 0; i < admins.length; i++) {
             admins[i].docType = 'admin';
@@ -33,12 +179,37 @@ class Fabvote extends Contract {
             console.info('Added <-->', admins[i]);
         }
 
-        for (let i = 0; i < admins.length; i++) {
+        for (let i = 0; i < elections.length; i++) {
             elections[i].docType = 'election';
             elections[i].id = 'ELECTION' + i;
-            await ctx.stub.putState(admins[i].id, Buffer.from(JSON.stringify(elections[i])));
+            await ctx.stub.putState(elections[i].id, Buffer.from(JSON.stringify(elections[i])));
             console.info('Added <-->', elections[i]);
         }
+
+        for (let i = 0; i < positions.length; i++) {
+            positions[i].docType = 'position';
+            await ctx.stub.putState(positions[i].id, Buffer.from(JSON.stringify(positions[i])));
+            console.info('Added <-->', positions[i]);
+        }
+
+        for (let i = 0; i < candidates.length; i++) {
+            candidates[i].docType = 'candidate';
+            await ctx.stub.putState(candidates[i].id, Buffer.from(JSON.stringify(candidates[i])));
+            console.info('Added <-->', candidates[i]);
+        }
+
+        for (let i = 0; i < voters.length; i++) {
+            voters[i].docType = 'voter';
+            await ctx.stub.putState(voters[i].id, Buffer.from(JSON.stringify(voters[i])));
+            console.info('Added <-->', voters[i]);
+        }
+        
+        // for (let i = 0; i < votes.length; i++) {
+        //     votes[i].docType = 'vote';
+        //     votes[i].id = 'VOTES' + i;
+        //     await ctx.stub.putState(votes[i].id, Buffer.from(JSON.stringify(votes[i])));
+        //     console.info('Added <-->', votes[i]);
+        // }
     }
 
     // Election Configure
@@ -47,9 +218,28 @@ class Fabvote extends Contract {
         if (!electionAsBytes || electionAsBytes.length === 0) {
             throw new Error(`${id} does not exist`);
         }
-        console.log(positionAsBytes.toString());
-        return positionAsBytes.toString();
+        return electionAsBytes.toString();
     }
+
+    async readAllElections(ctx) {
+        const startKey = 'ELECTION';
+        const endKey = 'ELECTIONz';
+        const allResults = [];
+        for await (const {key, value} of ctx.stub.getStateByRange(startKey, endKey)) {
+            const strValue = Buffer.from(value).toString('utf8');
+            let record;
+            try {
+                record = JSON.parse(strValue);
+            } catch (err) {
+                console.log(err);
+                record = strValue;
+            }
+            allResults.push(record);
+        }
+        console.info(allResults);
+        return JSON.stringify(allResults);
+    }
+
 
     async editElection(ctx, id, name, start_date, end_date, active) {
         console.info('============= START : editElection ===========');
@@ -72,12 +262,12 @@ class Fabvote extends Contract {
         if (!positionAsBytes || positionAsBytes.length === 0) {
             throw new Error(`${id} does not exist`);
         }
-        console.log(positionAsBytes.toString());
         return positionAsBytes.toString();
     }
 
     async createPosition(ctx, id, name, maximum) {
         console.info('============= START : Create Position ===========');
+        maximum = parseInt(maximum);
         const position = {
             docType: 'position',
             id: 'POSITION' + id,
@@ -91,7 +281,7 @@ class Fabvote extends Contract {
 
     async readAllPositions(ctx) {
         const startKey = 'POSITION';
-        const endKey = '';
+        const endKey = 'POSITIONz';
         const allResults = [];
         for await (const {key, value} of ctx.stub.getStateByRange(startKey, endKey)) {
             const strValue = Buffer.from(value).toString('utf8');
@@ -102,7 +292,7 @@ class Fabvote extends Contract {
                 console.log(err);
                 record = strValue;
             }
-            allResults.push({ Key: key, Record: record });
+            allResults.push(record);
         }
         console.info(allResults);
         return JSON.stringify(allResults);
@@ -114,10 +304,10 @@ class Fabvote extends Contract {
         if (!positionAsBytes || positionAsBytes.length === 0) {
             throw new Error(`${id} does not exist`);
         }
-        const election = JSON.parse(positionAsBytes.toString());
-        election.name = name;
-        election.maximum = maximum;
-        await ctx.stub.putState(id, Buffer.from(JSON.stringify(election)));
+        const position = JSON.parse(positionAsBytes.toString());
+        position.name = name;
+        position.maximum = parseInt(maximum);
+        await ctx.stub.putState(id, Buffer.from(JSON.stringify(position)));
         console.info('============= END : editPosition ===========');
     }
 
@@ -128,29 +318,26 @@ class Fabvote extends Contract {
         if (!candidateAsBytes || candidateAsBytes.length === 0) {
             throw new Error(`${id} does not exist`);
         }
-        console.log(candidateAsBytes.toString());
         return candidateAsBytes.toString();
     }
 
-    async createCandidate(ctx, id, name, positionId, image, biography) {
+    async createCandidate(ctx, id, name, positionId, biography, imageUrl) {
         console.info('============= START : Create Candidate ===========');
-
         const candidate = {
             docType: 'candidate',
             id: 'CANDIDATE' + id,
             name,
-            image,
             positionId,
-            biography
+            biography,
+            imageUrl,
         };
-
         await ctx.stub.putState(candidate.id, Buffer.from(JSON.stringify(candidate)));
         console.info('============= END : Create Candidate ===========');
     }
 
     async readAllCandidates(ctx) {
         const startKey = 'CANDIDATE';
-        const endKey = '';
+        const endKey = 'CANDIDATEz';
         const allResults = [];
         for await (const {key, value} of ctx.stub.getStateByRange(startKey, endKey)) {
             const strValue = Buffer.from(value).toString('utf8');
@@ -161,10 +348,18 @@ class Fabvote extends Contract {
                 console.log(err);
                 record = strValue;
             }
-            allResults.push({ Key: key, Record: record });
+            allResults.push(record);
         }
         console.info(allResults);
         return JSON.stringify(allResults);
+    }
+
+    async readCandidatesByPositionId(ctx, positionId) {
+        let queryString = {};
+		queryString.selector = {};
+		queryString.selector.docType = 'candidate';
+		queryString.selector.positionId = positionId;
+		return await this.GetQueryResultForQueryString(ctx, JSON.stringify(queryString)); //shim.success(queryResults);
     }
 
     async changeCandidateName(ctx, id, newName) {
@@ -179,7 +374,7 @@ class Fabvote extends Contract {
         console.info('============= END : changeCandidateName ===========');
     }
 
-    async editCandidate(ctx, id, name, positionId, image, biography) {
+    async editCandidate(ctx, id, name, positionId, biography, imageUrl) {
         console.info('============= START : editCandidate ===========');
         const candidateAsBytes = await ctx.stub.getState(id);
         if (!candidateAsBytes || candidateAsBytes.length === 0) {
@@ -188,7 +383,7 @@ class Fabvote extends Contract {
         const candidate = JSON.parse(candidateAsBytes.toString());
         candidate.name = name;
         candidate.positionId = positionId;
-        candidate.image = image;
+        candidate.imageUrl = imageUrl;
         candidate.biography = biography;
         await ctx.stub.putState(id, Buffer.from(JSON.stringify(candidate)));
         console.info('============= END : editCandidate ===========');
@@ -205,7 +400,7 @@ class Fabvote extends Contract {
 
     async readAllVoters(ctx) {
         const startKey = 'VOTER';
-        const endKey = '';
+        const endKey = 'VOTERz';
         const allResults = [];
         for await (const {key, value} of ctx.stub.getStateByRange(startKey, endKey)) {
             const strValue = Buffer.from(value).toString('utf8');
@@ -216,13 +411,13 @@ class Fabvote extends Contract {
                 console.log(err);
                 record = strValue;
             }
-            allResults.push({ Key: key, Record: record });
+            allResults.push(record);
         }
         console.info(allResults);
         return JSON.stringify(allResults);
     }
 
-    async createVoter(ctx, id, name, email, password, hasVoted=false) {
+    async createVoter(ctx, id, name, email, password, voted=false) {
         console.info('============= START : Create voter ===========');
         const exists = await this.assetExists(ctx, id);
         if (exists) {
@@ -234,13 +429,18 @@ class Fabvote extends Contract {
             name,
             email,
             password,
-            hasVoted
+            voted
         };
         await ctx.stub.putState(voter.id, Buffer.from(JSON.stringify(voter)));
+        // let positions = await this.readAllPositions();
+        // positions = JSON.parse(positions);
+        // positions.array.forEach(async (element) => {
+        //     await this.createVote(ctx, )
+        // });
         console.info('============= END : Create voter ===========');
     }
 
-    async editVoter(ctx, id, name, email, password, hasVoted) {
+    async editVoter(ctx, id, name, email, password, voted) {
         console.info('============= START : editVoter ===========');
         const voterAsBytes = await ctx.stub.getState(id);
         if (!voterAsBytes || voterAsBytes.length === 0) {
@@ -251,43 +451,52 @@ class Fabvote extends Contract {
         voter.email = email;
         voter.biography = biography;
         voter.password = password;
-        voter.hasVoted = hasVoted;
+        voter.voted = voted;
         await ctx.stub.putState(id, Buffer.from(JSON.stringify(voter)));
         console.info('============= END : editVoter ===========');
     }
 
-    // ballot
-    async readBallot(ctx, id) {
-        const ballotAsBytes = await ctx.stub.getState(id);
-        if (!ballotAsBytes || ballotAsBytes.length === 0) {
-            throw new Error(`${id} does not exist`);
-        }
-        return ballotAsBytes.toString('utf8');
-    }
-
-    async readBallotsByOwner(ctx, ownerId) {
+    async readVoterByEmail(ctx, email) {
         let queryString = {};
 		queryString.selector = {};
-		queryString.selector.docType = 'ballot';
+		queryString.selector.docType = 'voter';
+		queryString.selector.email = email;
+        // queryString.selector.voted = 
+		return await this.GetQueryResultForQueryString(ctx, JSON.stringify(queryString));     
+    }
+
+    // vote
+    async readVote(ctx, id) {
+        const voteAsBytes = await ctx.stub.getState(id);
+        if (!voteAsBytes || voteAsBytes.length === 0) {
+            throw new Error(`${id} does not exist`);
+        }
+        return voteAsBytes.toString('utf8');
+    }
+
+    async readVotesByOwner(ctx, ownerId) {
+        let queryString = {};
+		queryString.selector = {};
+		queryString.selector.docType = 'vote';
 		queryString.selector.ownerId = ownerId;
 		return await this.GetQueryResultForQueryString(ctx, JSON.stringify(queryString)); //shim.success(queryResults);
     }
 
-    async createBallot(ctx, id, ownerId, hasVoted = false) {
+    async createVote(ctx, id, ownerId, positionId) {
         console.info('============= START : Create ballot ===========');
-        const ballot = {
-            docType: 'ballot',
-            id: 'BALLOT' + id,
+        const vote = {
+            docType: 'vote',
+            id: 'VOTES' + id,
+            positionId,
             ownerId,
-            hasVoted
         };
-        await ctx.stub.putState(ballot.id, Buffer.from(JSON.stringify(ballot)));
-        console.info('============= END : Create ballot ===========');
+        await ctx.stub.putState(vote.id, Buffer.from(JSON.stringify(vote)));
+        console.info('============= END : Create vote ===========');
     }
 
-    async readAllBallots(ctx) {
-        const startKey = 'BALLOT';
-        const endKey = '';
+    async readAllVotes(ctx) {
+        const startKey = 'VOTES';
+        const endKey = 'VOTESz';
         const allResults = [];
         for await (const {key, value} of ctx.stub.getStateByRange(startKey, endKey)) {
             const strValue = Buffer.from(value).toString('utf8');
@@ -298,32 +507,46 @@ class Fabvote extends Contract {
                 console.log(err);
                 record = strValue;
             }
-            allResults.push({ Key: key, Record: record });
+            allResults.push(record);
         }
-        console.info(allResults);
         return JSON.stringify(allResults);
     }
 
-    async changeBallotOwnerId(ctx, id, newOwnerId) {
-        console.info('============= START : changeBallotOwnerId ===========');
-        const ballotAsBytes = await ctx.stub.getState(id); // get the ballot from chaincode state
-        if (!ballotAsBytes || ballotAsBytes.length === 0) {
-            throw new Error(`${id} does not exist`);
-        }
-        const ballot = JSON.parse(ballotAsBytes.toString());
-        ballot.ownerId = newOwnerId;
-        await ctx.stub.putState(id, Buffer.from(JSON.stringify(ballot)));
-        console.info('============= END : changeBallotOwnerId ===========');
+    async readVoteBySelector(ctx, positionId, ownerId, voted=False) {
+        let queryString = {};
+		queryString.selector = {};
+		queryString.selector.docType = 'vote';
+		queryString.selector.positionId = positionId;
+        queryString.selector.ownerId = ownerId;
+        // queryString.selector.voted = 
+		return await this.GetQueryResultForQueryString(ctx, JSON.stringify(queryString)); //shim.success(queryResults);
     }
 
+    // async changeVoteOwnerId(ctx, id, newOwnerId) {
+    //     const voteAsBytes = await ctx.stub.getState(id); // get the vote from chaincode state
+    //     if (!voteAsBytes || voteAsBytes.length === 0) {
+    //         throw new Error(`${id} does not exist`);
+    //     }
+    //     const vote = JSON.parse(voteAsBytes.toString());
+    //     vote.ownerId = newOwnerId;
+    //     await ctx.stub.putState(id, Buffer.from(JSON.stringify(vote)));
+    //     console.info('============= START : changeVoteOwnerId ===========');
+    // }
+
     // async votingAction(ctx, ownerId, votedCandidates) {
-    //     ballots = await this.readBallotsByOwner(ctx, ownerId);
+    //     ballots = await this.readVotesByOwner(ctx, ownerId);
     //     if (!ballots && ballot.length === 0) {
     //         throw new Error(`You had voted !`)
     //     }
     //     results = JSON.parse(ballots);
     //     console.log(results[i]);
     // }
+    // ballot
+    // async readAllBalots(ctx) {
+
+    // }
+
+    // admin
 
     async readAdmin(ctx, id) {
         const adminAsBytes = await ctx.stub.getState(id);
@@ -333,9 +556,17 @@ class Fabvote extends Contract {
         return adminAsBytes.toString(); 
     }
 
+    async readAdminByEmail(ctx, email) {
+        let queryString = {};
+		queryString.selector = {};
+		queryString.selector.docType = 'admin';
+		queryString.selector.email = email;
+		return await this.GetQueryResultForQueryString(ctx, JSON.stringify(queryString)); //shim.success(queryResults);
+    }
+
     async readAllAdmins(ctx) {
         const startKey = 'ADMIN';
-        const endKey = '';
+        const endKey = 'ADMINz';
         const allResults = [];
         for await (const {key, value} of ctx.stub.getStateByRange(startKey, endKey)) {
             const strValue = Buffer.from(value).toString('utf8');
@@ -346,7 +577,7 @@ class Fabvote extends Contract {
                 console.log(err);
                 record = strValue;
             }
-            allResults.push({ Key: key, Record: record });
+            allResults.push(record);
         }
         console.info(allResults);
         return JSON.stringify(allResults);
@@ -364,8 +595,16 @@ class Fabvote extends Contract {
         }
         await ctx.stub.putState(admin.id, Buffer.from(JSON.stringify(admin)));
     }
-
+    
     // common function
+    async readAsset(ctx, id) {
+        const assetAsBytes = await ctx.stub.getState(id);
+        if (!assetAsBytes || assetAsBytes.length === 0) {
+            throw new Error(`${id} does not exist`);
+        }
+        return assetAsBytes.toString();
+    }
+
     async assetExists(ctx, id) {
         const assetAsBytes = await ctx.stub.getState(id);
         return assetAsBytes && assetAsBytes.length > 0;
@@ -378,6 +617,18 @@ class Fabvote extends Contract {
         }
         return ctx.stub.deleteState(id);
     }
+
+    async QueryAssetsByQueryString(ctx, queryString) {
+		return await this.GetQueryResultForQueryString(ctx, queryString);
+	}
+
+    async GetAssetHistory(ctx, assetName) {
+
+		let resultsIterator = await ctx.stub.getHistoryForKey(assetName);
+		let results = await this._GetAllResults(resultsIterator, true);
+
+		return JSON.stringify(results);
+	}
 
 	async _GetAllResults(iterator, isHistory) {
 		let allResults = [];
@@ -395,6 +646,7 @@ class Fabvote extends Contract {
 						console.log(err);
 						jsonRes.Value = res.value.value.toString('utf8');
 					}
+                    allResults.push(jsonRes.Value);
 				} else {
 					jsonRes.Key = res.value.key;
 					try {
@@ -403,8 +655,9 @@ class Fabvote extends Contract {
 						console.log(err);
 						jsonRes.Record = res.value.value.toString('utf8');
 					}
+                    allResults.push(jsonRes.Record);
 				}
-				allResults.push(jsonRes);
+				
 			}
 			res = await iterator.next();
 		}
@@ -416,7 +669,6 @@ class Fabvote extends Contract {
 
 		let resultsIterator = await ctx.stub.getQueryResult(queryString);
 		let results = await this._GetAllResults(resultsIterator, false);
-
 		return JSON.stringify(results);
 	}
 }

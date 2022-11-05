@@ -21,8 +21,16 @@ app.get('/', (req, res) => {
 
 const candidateRouter = require('./routes/candidate.route');
 const positionRouter = require('./routes/position.route');
-app.use('/candidate', candidateRouter);
-app.use('/position', positionRouter);
+const voteRouter = require('./routes/vote.route');
+const voterRouter = require('./routes/voter.route');
+const authenticationRouter = require('./routes/authentication.route');
+const ballotRouter = require('./routes/ballot.route');
+app.use('/candidates', candidateRouter);
+app.use('/positions', positionRouter);
+app.use('/votes', voteRouter);
+app.use('/voters', voterRouter);
+app.use('/authentication', authenticationRouter);
+app.use('/ballots', ballotRouter);
 
 app.listen(PORT, (error) =>{
     if(!error)
@@ -31,5 +39,3 @@ app.listen(PORT, (error) =>{
         console.log("Error occurred, server can't start", error);
     }
 );
-
-

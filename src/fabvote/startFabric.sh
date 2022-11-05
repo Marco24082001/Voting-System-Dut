@@ -30,8 +30,6 @@ pushd ../test-network
 # ./network.sh deployCC -c ballotchannel -ccn ballot -ccv 1 -cci initLedger -ccl ${CC_SRC_LANGUAGE} -ccp ${CC_BALLOT_SRC_PATH}
 popd
 
-./initialUser.sh
-
 cat <<EOF
 
 Total setup execution time : $(($(date +%s) - starttime)) secs ...
