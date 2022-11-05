@@ -18,6 +18,14 @@ class Fabvote extends Contract {
                 password: 'admin'
             }
         ];
+        const elections = [
+            {
+                name: 'Default election',
+                start_time: (new Date()).toLocaleString(),
+                end_time: (new Date(new Date().getDate() + 1)).toLocaleString(),
+                active: false
+            }
+        ]
         for (let i = 0; i < admins.length; i++) {
             admins[i].docType = 'admin';
             admins[i].id = 'ADMIN' + i;
@@ -25,32 +33,37 @@ class Fabvote extends Contract {
             console.info('Added <-->', admins[i]);
         }
 
-        // const positions = [
-        //     {
-        //         name: 'ĐB HĐND TP đà nẵng',
-        //         maximum: 3,
-        //         start_time: (new Date()).toLocaleString(),
-        //         end_time: (new Date(new Date().getDate() + 1)).toLocaleString()
-        //     }
-        // ];
-        // const ballots = [
-        //     {
-        //         ownerId: 'voter1',
-        //         hasVoted: false
-        //     }
-        // ];
+        for (let i = 0; i < admins.length; i++) {
+            elections[i].docType = 'election';
+            elections[i].id = 'ELECTION' + i;
+            await ctx.stub.putState(admins[i].id, Buffer.from(JSON.stringify(elections[i])));
+            console.info('Added <-->', elections[i]);
+        }
+    }
 
-        // for (let i = 0; i < positions.length; i++) {
-        //     positions[i].docType = 'position';
-        //     await ctx.stub.putState('POSITION' + i, Buffer.from(stringify(positions[i])));
-        //     console.info('Added <--> ', positions[i]);
-        // }
-        // for (let i = 0; i < ballots.length; i++) {
-        //     ballots[i].docType = 'ballot';
-        //     await ctx.stub.putState(uuidv4(), Buffer.from(stringify(ballots[i])));
-        //     console.info('Added <--> ', ballots[i]);
-        // }
-        // console.info('============= END : Initialize Ledger ===========');
+    // Election Configure
+    async readElection(ctx, id) {
+        const electionAsBytes = await ctx.stub.getState(id);
+        if (!electionAsBytes || electionAsBytes.length === 0) {
+            throw new Error(`${id} does not exist`);
+        }
+        console.log(positionAsBytes.toString());
+        return positionAsBytes.toString();
+    }
+
+    async editElection(ctx, id, name, start_date, end_date, active) {
+        console.info('============= START : editElection ===========');
+        const electionAsBytes = await ctx.stub.getState(id);
+        if (!electionAsBytes || electionAsBytes.length === 0) {
+            throw new Error(`${id} does not exist`);
+        }
+        const election = JSON.parse(electionAsBytes.toString());
+        election.name = name;
+        election.start_date = start_date
+        election.end_date = end_date
+        election.active = active
+        await ctx.stub.putState(id, Buffer.from(JSON.stringify(election)));
+        console.info('============= END : editElection ===========');
     }
 
     // Position
@@ -63,18 +76,14 @@ class Fabvote extends Contract {
         return positionAsBytes.toString();
     }
 
-    async createPosition(ctx, id, name, maximum, start_time, end_time) {
+    async createPosition(ctx, id, name, maximum) {
         console.info('============= START : Create Position ===========');
         const position = {
             docType: 'position',
             id: 'POSITION' + id,
             name,
             maximum,
-            start_time: start_time,
-            end_time: end_time
         };
-
-        
         await ctx.stub.putState(position.id, Buffer.from(JSON.stringify(position)));
         // return JSON.stringify('dddd');
         console.info('============= END : Create Position ===========');
@@ -99,19 +108,19 @@ class Fabvote extends Contract {
         return JSON.stringify(allResults);
     }
 
-    async changePositionOwner(ctx, id, newOwner) {
-        console.info('============= START : changePositionOwner ===========');
-
-        const positionAsBytes = await ctx.stub.getState(id); // get the car from chaincode state
+    async editPosition(ctx, id, name, maximum) {
+        console.info('============= START : editPosition ===========');
+        const positionAsBytes = await ctx.stub.getState(id);
         if (!positionAsBytes || positionAsBytes.length === 0) {
             throw new Error(`${id} does not exist`);
         }
-        const car = JSON.parse(positionAsBytes.toString());
-        car.owner = newOwner;
-
-        await ctx.stub.putState(id, Buffer.from(JSON.stringify(car)));
-        console.info('============= END : changePositionOwner ===========');
+        const election = JSON.parse(positionAsBytes.toString());
+        election.name = name;
+        election.maximum = maximum;
+        await ctx.stub.putState(id, Buffer.from(JSON.stringify(election)));
+        console.info('============= END : editPosition ===========');
     }
+
 
     // Candidate
     async readCandidate(ctx, id) {
@@ -123,13 +132,14 @@ class Fabvote extends Contract {
         return candidateAsBytes.toString();
     }
 
-    async createCandidate(ctx, id, name, positionId, biography) {
+    async createCandidate(ctx, id, name, positionId, image, biography) {
         console.info('============= START : Create Candidate ===========');
 
         const candidate = {
             docType: 'candidate',
             id: 'CANDIDATE' + id,
             name,
+            image,
             positionId,
             biography
         };
@@ -159,21 +169,96 @@ class Fabvote extends Contract {
 
     async changeCandidateName(ctx, id, newName) {
         console.info('============= START : changeCandidateName ===========');
-
-        const candidateAsBytes = await ctx.stub.getState(id); // get the candidate from chaincode state
+        const candidateAsBytes = await ctx.stub.getState(id);
         if (!candidateAsBytes || candidateAsBytes.length === 0) {
             throw new Error(`${id} does not exist`);
         }
         const candidate = JSON.parse(candidateAsBytes.toString());
         candidate.name = newName;
-
         await ctx.stub.putState(id, Buffer.from(JSON.stringify(candidate)));
         console.info('============= END : changeCandidateName ===========');
     }
 
+    async editCandidate(ctx, id, name, positionId, image, biography) {
+        console.info('============= START : editCandidate ===========');
+        const candidateAsBytes = await ctx.stub.getState(id);
+        if (!candidateAsBytes || candidateAsBytes.length === 0) {
+            throw new Error(`${id} does not exist`);
+        }
+        const candidate = JSON.parse(candidateAsBytes.toString());
+        candidate.name = name;
+        candidate.positionId = positionId;
+        candidate.image = image;
+        candidate.biography = biography;
+        await ctx.stub.putState(id, Buffer.from(JSON.stringify(candidate)));
+        console.info('============= END : editCandidate ===========');
+    }
+
+    // voter
+    async readVoter(ctx, id) {
+        const voterAsBytes = await ctx.stub.getState(id);
+        if (!voterAsBytes || voterAsBytes.length === 0) {
+            throw new Error(`${id} does not exist`);
+        }
+        return voterAsBytes.toString('utf8');
+    }
+
+    async readAllVoters(ctx) {
+        const startKey = 'VOTER';
+        const endKey = '';
+        const allResults = [];
+        for await (const {key, value} of ctx.stub.getStateByRange(startKey, endKey)) {
+            const strValue = Buffer.from(value).toString('utf8');
+            let record;
+            try {
+                record = JSON.parse(strValue);
+            } catch (err) {
+                console.log(err);
+                record = strValue;
+            }
+            allResults.push({ Key: key, Record: record });
+        }
+        console.info(allResults);
+        return JSON.stringify(allResults);
+    }
+
+    async createVoter(ctx, id, name, email, password, hasVoted=false) {
+        console.info('============= START : Create voter ===========');
+        const exists = await this.assetExists(ctx, id);
+        if (exists) {
+            throw new Error(`The voter ${id} already exists`);
+        }
+        const voter = {
+            docType: 'voter',
+            id: 'VOTER' + id,
+            name,
+            email,
+            password,
+            hasVoted
+        };
+        await ctx.stub.putState(voter.id, Buffer.from(JSON.stringify(voter)));
+        console.info('============= END : Create voter ===========');
+    }
+
+    async editVoter(ctx, id, name, email, password, hasVoted) {
+        console.info('============= START : editVoter ===========');
+        const voterAsBytes = await ctx.stub.getState(id);
+        if (!voterAsBytes || voterAsBytes.length === 0) {
+            throw new Error(`${id} does not exist`);
+        }
+        const voter = JSON.parse(voterAsBytes.toString());
+        voter.name = name;
+        voter.email = email;
+        voter.biography = biography;
+        voter.password = password;
+        voter.hasVoted = hasVoted;
+        await ctx.stub.putState(id, Buffer.from(JSON.stringify(voter)));
+        console.info('============= END : editVoter ===========');
+    }
+
     // ballot
     async readBallot(ctx, id) {
-        const ballotAsBytes = await ctx.stub.getState(id); // get the ballot from chaincode state
+        const ballotAsBytes = await ctx.stub.getState(id);
         if (!ballotAsBytes || ballotAsBytes.length === 0) {
             throw new Error(`${id} does not exist`);
         }
@@ -190,14 +275,12 @@ class Fabvote extends Contract {
 
     async createBallot(ctx, id, ownerId, hasVoted = false) {
         console.info('============= START : Create ballot ===========');
-
         const ballot = {
             docType: 'ballot',
             id: 'BALLOT' + id,
             ownerId,
             hasVoted
         };
-
         await ctx.stub.putState(ballot.id, Buffer.from(JSON.stringify(ballot)));
         console.info('============= END : Create ballot ===========');
     }
@@ -223,32 +306,25 @@ class Fabvote extends Contract {
 
     async changeBallotOwnerId(ctx, id, newOwnerId) {
         console.info('============= START : changeBallotOwnerId ===========');
-
         const ballotAsBytes = await ctx.stub.getState(id); // get the ballot from chaincode state
         if (!ballotAsBytes || ballotAsBytes.length === 0) {
             throw new Error(`${id} does not exist`);
         }
         const ballot = JSON.parse(ballotAsBytes.toString());
         ballot.ownerId = newOwnerId;
-
         await ctx.stub.putState(id, Buffer.from(JSON.stringify(ballot)));
         console.info('============= END : changeBallotOwnerId ===========');
     }
 
-    async votingAction(ctx, ownerId, votedCandidates) {
-        ballots = await this.readBallotsByOwner(ctx, ownerId);
-        if (!ballots && ballot.length === 0) {
-            throw new Error(`You had voted !`)
-        }
-        results = JSON.parse(ballots);
-        console.log(results[i]);
-    }
-
-    // async getKeyValue(ctx, ownerId) {
-        
+    // async votingAction(ctx, ownerId, votedCandidates) {
+    //     ballots = await this.readBallotsByOwner(ctx, ownerId);
+    //     if (!ballots && ballot.length === 0) {
+    //         throw new Error(`You had voted !`)
+    //     }
+    //     results = JSON.parse(ballots);
+    //     console.log(results[i]);
     // }
 
-    // admin
     async readAdmin(ctx, id) {
         const adminAsBytes = await ctx.stub.getState(id);
         if (!adminAsBytes || adminAsBytes.length === 0) {
@@ -303,10 +379,6 @@ class Fabvote extends Contract {
         return ctx.stub.deleteState(id);
     }
 
-    // This is JavaScript so without Funcation Decorators, all functions are assumed
-	// to be transaction functions
-	//
-	// For internal functions... prefix them with _
 	async _GetAllResults(iterator, isHistory) {
 		let allResults = [];
 		let res = await iterator.next();

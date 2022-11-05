@@ -5,6 +5,7 @@
                 <el-table :data="filterTableData" style="width: 100%" max-height="50vh">
                 <el-table-column label="Lastname" prop="lastname" sortable />
                 <el-table-column label="Firstname" prop="firstname" sortable/>
+                <el-table-column label="Email" prop="email" sortable/>
                 <el-table-column label="Voterid" prop="voterid" sortable/>
                 <el-table-column label="Hasvoted" prop="has_voted" sortable/>
                 <el-table-column align="right">
