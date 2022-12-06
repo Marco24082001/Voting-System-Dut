@@ -27,7 +27,7 @@
             <a class="dropdown-item" href="#">Notification 2</a>
             <a class="dropdown-item" href="#">Notification 3</a>
             <a class="dropdown-item" href="#">Notification 4</a>
-            <a class="dropdown-item" href="#">Another notification</a>
+            <a class="dropdown-item" href="#" @click="logout">Logout</a>
           </drop-down>
           <li class="nav-item">
             <a href="#" class="nav-link">
@@ -42,6 +42,7 @@
     </div></nav>
 </template>
 <script>
+import AuthenticationService from "@/services/authentication/authentication.services";
 export default {
   computed: {
     routeName() {
@@ -76,6 +77,10 @@ export default {
     },
     hideSidebar() {
       this.$sidebar.value.displaySidebar(false);
+    },
+    logout: async function() {
+      await AuthenticationService.logout();      
+      this.$router.go();
     }
   }
 };

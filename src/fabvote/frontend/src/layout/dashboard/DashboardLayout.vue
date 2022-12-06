@@ -98,7 +98,7 @@ export default {
   },
   computed: {
     ...mapState({
-      role: state => state.user.currentUser.role
+      role: state => state.user.currentUser.docType
     })
   },
   methods: {

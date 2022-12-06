@@ -432,11 +432,6 @@ class Fabvote extends Contract {
             voted
         };
         await ctx.stub.putState(voter.id, Buffer.from(JSON.stringify(voter)));
-        // let positions = await this.readAllPositions();
-        // positions = JSON.parse(positions);
-        // positions.array.forEach(async (element) => {
-        //     await this.createVote(ctx, )
-        // });
         console.info('============= END : Create voter ===========');
     }
 
@@ -454,6 +449,13 @@ class Fabvote extends Contract {
         voter.voted = voted;
         await ctx.stub.putState(id, Buffer.from(JSON.stringify(voter)));
         console.info('============= END : editVoter ===========');
+    }
+
+    async setVotedById(ctx, id) {
+        const voterAsBytes = await ctx.stub.getState(id);
+        const voter = JSON.parse(voterAsBytes.toString());
+        voter.voted = true;
+        await ctx.stub.putState(id, Buffer.from(JSON.stringify(voter)));
     }
 
     async readVoterByEmail(ctx, email) {
@@ -481,6 +483,8 @@ class Fabvote extends Contract {
 		queryString.selector.ownerId = ownerId;
 		return await this.GetQueryResultForQueryString(ctx, JSON.stringify(queryString)); //shim.success(queryResults);
     }
+
+    
 
     async createVote(ctx, id, ownerId, positionId) {
         console.info('============= START : Create ballot ===========');

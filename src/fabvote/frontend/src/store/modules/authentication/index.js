@@ -2,7 +2,6 @@ export default {
     namespaced: true,
     state: {
         accessToken: "",
-        role: "",
     },
     getters: {
         getAccessToken(state) { 

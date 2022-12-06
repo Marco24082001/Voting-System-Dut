@@ -1,8 +1,8 @@
 const { gateway } = require('../services/gateway')
 // import { v4 as uuidv4 } from 'uuid'; 
-const { v4:uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 
-module.exports.getAllBallots = async function(req, res) {
+module.exports.getAllBallots = async function (req, res) {
   try {
     let ballots = [];
     const network = await gateway.getNetwork('fabvotechannel');
@@ -10,57 +10,59 @@ module.exports.getAllBallots = async function(req, res) {
     const positions = JSON.parse(await contract.evaluateTransaction('readAllPositions'));
     for (const position of positions) {
       let ballot = {};
-      const queryString = { selector : {
-        docType : 'candidate',
-        positionId : position.id
-      }};
+      const queryString = {
+        selector: {
+          docType: 'candidate',
+          positionId: position.id
+        }
+      };
       const candidates = JSON.parse(await contract.evaluateTransaction('QueryAssetsByQueryString', JSON.stringify(queryString)));
       ballot.position = position;
       ballot.candidates = candidates;
       ballots.push(ballot);
     }
     console.log('Transaction has been submitted');
-    return res.status(200).json({ response : ballots});
-  } catch (error){
+    return res.status(200).json({ response: ballots });
+  } catch (error) {
     console.log(error);
-    return res.json({ error : error });
+    return res.json({ error: error });
   }
 }
 
-module.exports.getBallotsForVoter = async function(req, res) {
+module.exports.getBallotsForVoter = async function (req, res) {
   try {
     const voterId = req.params.id;
     const network = await gateway.getNetwork('fabvotechannel');
     const contract = network.getContract('fabvote');
     // check user has voted
-    const voter = JSON.parse(await  contract.evaluateTransaction('readAsset', voterId));
+    const voter = JSON.parse(await contract.evaluateTransaction('readAsset', voterId));
     console.log(voter);
   } catch (error) {
     console.log(error);
   }
 }
 
-module.exports.submitBallots = async function(req, res) {
+module.exports.submitBallots = async function (req, res) {
   try {
-    console.log(req.body);
     const network = await gateway.getNetwork('fabvotechannel');
     const contract = network.getContract('fabvote');
     const user = JSON.parse(await contract.evaluateTransaction('readAsset', req.user.id));
     if (!user.voted) {
       const ballots = req.body;
-      for(const ballot of ballots) {
-        for(const voted_candidate of ballot.voted_candidates) {
+      for (const ballot of ballots) {
+        for (const voted_candidate of ballot.voted_candidates) {
           const id = uuidv4();
-          await contract.submitTransaction('createVote', id, voted_candidate.id, ballot.position.id, true);
+          await contract.submitTransaction('createVote', id, voted_candidate, ballot.position.id);
         }
       }
-      return res.json({ response : 'success' })
-      // console.log(req.data);
+      await contract.submitTransaction('setVotedById', user.id);
+      return res.json({ response: 'success' })
     } else {
-      return res.json({error : "You had voted!"});
+      return res.json({ error: "You had voted!" });
     }
   } catch (error) {
-    return res.json({error : error });
+    console.log(error);
+    return res.json({ error: error });
   }
 }
 

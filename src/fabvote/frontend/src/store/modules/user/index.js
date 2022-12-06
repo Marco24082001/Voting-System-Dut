@@ -5,7 +5,8 @@ export default {
             id: "",
             name: "",
             email: "",
-            role: "",
+            password: "",
+            docType: "",
         }
     },
     getters: {

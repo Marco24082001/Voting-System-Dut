@@ -5,7 +5,7 @@
         <el-table :data="filterTableData" style="width: 100%" max-height="50vh">
           <el-table-column label="Photo">
             <template #default="scope">
-              <el-avatar :size="120" shape="square" @error="errorHandler">
+              <el-avatar :size="120" shape="square">
                 <img :src=scope.row.imageUrl />
               </el-avatar>
             </template>

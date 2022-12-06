@@ -76,16 +76,23 @@ export default {
   </style>
    -->
 <template>
-  <div :class="{'nav-open': $sidebar.value.showSidebar}">
+  <div :class="{'nav-open': $sidebar.value.showSidebar}" v-loading.fullscreen.lock="animation.fullscreenLoading">
     <!-- <notifications></notifications> -->
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 
 export default {
-  
+  computed: {
+    ...mapState(["animation"]),
+  },
+  created() {
+    this.$store.commit("animation/setFullscreenLoading", false);
+  },
 };
 </script>
 

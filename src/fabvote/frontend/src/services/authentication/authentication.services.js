@@ -17,6 +17,16 @@ class AuthenticationService extends BaseService {
         return res;
     }
 
+    async logout() {
+        try {
+            localStorage.removeItem("vuex");
+            localStorage.clear();
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
     async getCurrentUser() {
         try {
             return await this.request().get(`/${this.entity}/getCurrentUser`);

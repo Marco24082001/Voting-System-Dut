@@ -9,7 +9,6 @@
             :model="model"
             :rules="rules"
             ref="form"
-            @submit.enter.prevent="login"
             >
                 <el-form-item prop="name" label="Name">
                     <el-input v-model="model.name" placeholder="Firstname">
@@ -23,7 +22,6 @@
                 </el-form-item>
                 <el-form-item>
                 <el-button
-                    :loading="loading"
                     class="login-button"
                     type="primary"
                     native-type="submit"

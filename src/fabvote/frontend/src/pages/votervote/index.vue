@@ -1,5 +1,6 @@
 <template>
     <div class="row justify-content-center">
+        <h1 v-if="voted == true">Ban da vote !</h1>
         <div class="col-12" align="center">
             <el-card v-for="(ballot, index) in ballots" :key="index" class="box-card mt-4">
                 <template #header>
@@ -22,31 +23,29 @@
                             <el-button class="button ml-4" type="primary" text>Tiểu sử</el-button>
                             </div>
                         </template>
-                        <el-avatar shape="square" :size="300" :fit="images.fits[1]" :src="candidate.imageUrl" />
+                        <el-avatar shape="square" :size="300" fit="cover" :src="candidate.imageUrl" />
                         <div class="row justify-content-center">
-                            <el-button type="primary" plain @click="vote(index, candidate.id)">Vote</el-button>
+                            <el-button type="primary" plain @click="vote($event, index, candidate.id)">Vote</el-button>
                         </div>
                     </el-card>
                 </el-space>
             </el-card>
-            <el-button type="primary" class="mt-4" @click="votedSubmit">Submit your votes</el-button>
+            <el-button v-if="voted == false" type="primary" class="mt-4" @click="votedSubmit">Submit your votes</el-button>
         </div>
     </div>
 </template> 
 
 <script>
 // const img_url = require('@/assets/img/vue-logo.png')
-import BallotServices from '@/services/ballot/ballot.services';
-import { ElMessage } from 'element-plus'
+import BallotServices from "@/services/ballot/ballot.services";
+import AuthenticationServices from "@/services/authentication/authentication.services";
+import { ElMessage } from "element-plus";
 
 export default {
     data() {
         return {
-            images: {
-                fits: ['cover', 'cover', 'cover', 'cover'],
-                url: "https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
-            },
             ballots: [],
+            voted: false,
         }
     },
     async created() {
@@ -54,21 +53,24 @@ export default {
         for (const ballot of this.ballots) {
             ballot.voted_candidates = []
         }
+        const currentUser = (await AuthenticationServices.getCurrentUser()).data.response;
+        this.voted = currentUser.voted;
     },
     methods: {
-        vote: function(index, candidateId) {
-
+        vote: function(event, index, candidateId) {
+            console.log(event);
             let idx = this.ballots[index].voted_candidates.indexOf(candidateId);
             if (idx !== -1) {
                 this.ballots[index].voted_candidates.splice(idx, 1);
+                event.target.innerText = "Vote";
             } else {
                 if (this.ballots[index].voted_candidates.length >= this.ballots[index].position.maximum) {
                     ElMessage.error(`Ban da bau chon qua ${this.ballots[index].position.maximum} nguoi o vi tri nay`);
                     return false
                 }
                 this.ballots[index].voted_candidates.push(candidateId);
+                event.target.innerText = "Unvote";
             }
-            console.log(this.ballots);
         },
 
         validate: function() {
@@ -84,7 +86,15 @@ export default {
         votedSubmit: async function() {
             
             if(this.validate()) {
-                await BallotServices.submitBallots(this.ballots);
+                this.$store.commit("animation/setFullscreenLoading", true);
+                const res = await BallotServices.submitBallots(this.ballots);
+                this.$store.commit("animation/setFullscreenLoading", false);
+                if (!res.data.error) {
+                    this.voted = true;
+                    ElMessage.success("Vote successed !")
+                } else {
+                    ElMessage.error(res.data.error);
+                }
             }
         },
 

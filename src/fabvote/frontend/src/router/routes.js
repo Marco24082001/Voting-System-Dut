@@ -11,6 +11,7 @@ import Votes from "@/pages/votes/index.vue";
 import Electionconfigure from "@/pages/election/index.vue";
 import Ballot from "@/pages/balot/index.vue";
 import Votervote from "@/pages/votervote/index.vue";
+import Stats from "@/pages/stats/index.vue";
 import NotFound from "@/pages/NotFoundPage.vue";
 
 import { Authenticate, AuthorizeAdmin, AuthorizeVoter, AuthorizeGuest } from "./middleware/auth";
@@ -45,7 +46,7 @@ const routes = [
       {
         path: "stats",
         name: "stats",
-        component: Dashboard
+        component: Stats
       }
     ]
   },
