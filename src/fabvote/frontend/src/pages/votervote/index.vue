@@ -1,6 +1,6 @@
 <template>
     <div class="row justify-content-center">
-        <h1 v-if="voted == true">Ban da vote !</h1>
+        <h1 v-if="'voted' === 'true'">Ban da vote !</h1>
         <div class="col-12" align="center">
             <el-card v-for="(ballot, index) in ballots" :key="index" class="box-card mt-4">
                 <template #header>
@@ -30,7 +30,8 @@
                     </el-card>
                 </el-space>
             </el-card>
-            <el-button v-if="voted == false" type="primary" class="mt-4" @click="votedSubmit">Submit your votes</el-button>
+            <el-button type="primary" class="mt-4" @click="votedSubmit">Submit your votes</el-button>
+            <el-button v-if="voted === 'false'" type="primary" class="mt-4" @click="votedSubmit">Submit your votes</el-button>
         </div>
     </div>
 </template> 
@@ -45,7 +46,7 @@ export default {
     data() {
         return {
             ballots: [],
-            voted: false,
+            voted: "false",
         }
     },
     async created() {
@@ -90,7 +91,7 @@ export default {
                 const res = await BallotServices.submitBallots(this.ballots);
                 this.$store.commit("animation/setFullscreenLoading", false);
                 if (!res.data.error) {
-                    this.voted = true;
+                    this.voted = 'true';
                     ElMessage.success("Vote successed !")
                 } else {
                     ElMessage.error(res.data.error);

@@ -69,7 +69,6 @@
 </template>
 
 <script>
-import { User, Lock } from "@element-plus/icons-vue";
 import PositionService from "@/services/position/position.services"
 const tableColumns = ["Id", "Name", "Salary", "Country", "City"];
 const tableData = [
@@ -93,26 +92,16 @@ export default {
       },
       table1: {
         title: "Positions Table",
-        subTitle: "All opened positions",
-        columns: [...tableColumns],
-        data: [...tableData]
+        subTitle: "All positions"
       },
       search: "",
       dialogFormVisible: false,
       dialogFormStatus: "create",
-      validCredentials: {
-        name: "DB HD quan tri",
-        maximum: 1
-      },
       model: {
         name: "",
         maximum: 1
       },
       editId: "",
-      icon: {
-        user: User,
-        lock: Lock
-      },
       loading: false,
       rules: {
         name: [
@@ -194,14 +183,15 @@ export default {
         console.log("invalid")
         return
       }
+      this.$store.commit("animation/setFullscreenLoading", true);
       const res = await PositionService.create(this.model);
+      this.$store.commit("animation/setFullscreenLoading", false);
       console.log(res.data.error)
       if (!res.data.error) {
         console.log(res)
         this.handleGetAll();
         this.closedialogForm();
       }
-      // // Logic with api
     },
     getData: async function() {
       let responseData = await PositionService.getAll();

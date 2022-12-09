@@ -23,7 +23,7 @@ class Fabvote extends Contract {
                 name: 'Default election',
                 start_time: (new Date()).toLocaleString(),
                 end_time: (new Date(new Date().getDate() + 1)).toLocaleString(),
-                active: false
+                active: "false"
             }
         ];
         const positions = [
@@ -103,21 +103,24 @@ class Fabvote extends Contract {
                 name: "Le Van Thanh Nhan",
                 email: "nhanle@gmail.com",
                 password: "123123aa",
-                voted: false,
+                voted: "false",
+                verified: "true",
             },
             {
                 id: "VOTERfa966e44-b321-4955-88ac-797633288deb",
                 name: "Nghe Ca Cu",
                 email: "cunghe@gmail.com",
                 password: "123123aa",
-                voted: false,
+                voted: "false",
+                verified: "true",
             },
             {
                 id: "VOTER6e408fdb-ba57-42ca-b06a-6dd8f9c0b3e6",
                 name: "Hoa Nhan Thuy",
                 email: "hoathuy@gmail.com",
                 password: "123123aa",
-                voted: false,
+                voted: "false",
+                verified: "true",
             },
             
         ];
@@ -417,7 +420,7 @@ class Fabvote extends Contract {
         return JSON.stringify(allResults);
     }
 
-    async createVoter(ctx, id, name, email, password, voted=false) {
+    async createVoter(ctx, id, name, email, password, voted="false", verified="false") {
         console.info('============= START : Create voter ===========');
         const exists = await this.assetExists(ctx, id);
         if (exists) {
@@ -429,13 +432,14 @@ class Fabvote extends Contract {
             name,
             email,
             password,
-            voted
+            voted,
+            verified,
         };
         await ctx.stub.putState(voter.id, Buffer.from(JSON.stringify(voter)));
         console.info('============= END : Create voter ===========');
     }
 
-    async editVoter(ctx, id, name, email, password, voted) {
+    async editVoter(ctx, id, name, email, password, voted, verified) {
         console.info('============= START : editVoter ===========');
         const voterAsBytes = await ctx.stub.getState(id);
         if (!voterAsBytes || voterAsBytes.length === 0) {
@@ -444,9 +448,9 @@ class Fabvote extends Contract {
         const voter = JSON.parse(voterAsBytes.toString());
         voter.name = name;
         voter.email = email;
-        voter.biography = biography;
         voter.password = password;
         voter.voted = voted;
+        voter.verified = verified;
         await ctx.stub.putState(id, Buffer.from(JSON.stringify(voter)));
         console.info('============= END : editVoter ===========');
     }
@@ -454,7 +458,7 @@ class Fabvote extends Contract {
     async setVotedById(ctx, id) {
         const voterAsBytes = await ctx.stub.getState(id);
         const voter = JSON.parse(voterAsBytes.toString());
-        voter.voted = true;
+        voter.voted = "true";
         await ctx.stub.putState(id, Buffer.from(JSON.stringify(voter)));
     }
 
@@ -484,15 +488,15 @@ class Fabvote extends Contract {
 		return await this.GetQueryResultForQueryString(ctx, JSON.stringify(queryString)); //shim.success(queryResults);
     }
 
-    
+
 
     async createVote(ctx, id, ownerId, positionId) {
         console.info('============= START : Create ballot ===========');
         const vote = {
             docType: 'vote',
             id: 'VOTES' + id,
-            positionId,
-            ownerId,
+            positionId: positionId,
+            ownerId: ownerId,
         };
         await ctx.stub.putState(vote.id, Buffer.from(JSON.stringify(vote)));
         console.info('============= END : Create vote ===========');

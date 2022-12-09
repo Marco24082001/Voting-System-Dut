@@ -1,17 +1,19 @@
-const { gateway } = require('../services/gateway')
-const { sign } = require('jsonwebtoken');
-require('dotenv').config()
+const { gateway } = require("../services/gateway")
+const { sign } = require("jsonwebtoken");
+const mailer = require("../utils/mailer");
+require("dotenv").config()
 
 
 module.exports.login = async function(req, res) {
   try {
-    const network = await gateway.getNetwork('fabvotechannel');
-    const contract = network.getContract('fabvote');
-    const { accountname, password} = req.body;
-    
-    const admin = JSON.parse(await contract.evaluateTransaction('readAdminByEmail', accountname));
+    const network = await gateway.getNetwork("fabvotechannel");
+    const contract = network.getContract("fabvote");
+    const { email, password} = req.body;
+    console.log(email, password);
+
+    const admin = JSON.parse(await contract.evaluateTransaction("readAdminByEmail", email));
     if (admin.length == 0) {
-        const voter = JSON.parse(await contract.evaluateTransaction('readVoterByEmail', accountname));
+        const voter = JSON.parse(await contract.evaluateTransaction("readVoterByEmail", email));
         if (voter.length == 0) {
             return res.json({ error: "User doesn't exist" });
         }
@@ -42,9 +44,9 @@ module.exports.login = async function(req, res) {
 
 module.exports.getCurrentUser = async function(req, res) {
   try {
-    const network = await gateway.getNetwork('fabvotechannel');
-    const contract = network.getContract('fabvote');
-    const user = JSON.parse(await  contract.evaluateTransaction('readAsset', req.user.id));
+    const network = await gateway.getNetwork("fabvotechannel");
+    const contract = network.getContract("fabvote");
+    const user = JSON.parse(await  contract.evaluateTransaction("readAsset", req.user.id));
     return res.status(200).json({ response : user })
   } catch (error) {
     return res.json({ error : error });

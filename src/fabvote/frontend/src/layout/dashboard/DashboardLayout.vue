@@ -59,7 +59,7 @@ export default {
     return {
       sidebarLinks: [
         {
-          path: '/icons',
+          path: '/dashboard',
           name: 'Dashboard',
           icon: 'ti-panel'
         },

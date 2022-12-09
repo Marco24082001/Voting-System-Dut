@@ -30,7 +30,7 @@
       <el-dialog v-model="dialogFormVisible" title="Candidates Dialog">
         <el-form class="login-form" label-position="left" label-width="6rem" :model="model" :rules="rules" ref="form">
           <el-form-item prop="imageUrl" label="Avatar">
-            <el-upload class="avatar-uploader" action="http://localhost:3000/candidate/upload" :show-file-list="false"
+            <el-upload class="avatar-uploader" action="http://localhost:3000/candidates/upload" :show-file-list="false"
               :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
               <img v-if="model.imageUrl" :src="model.imageUrl" class="avatar" />
               <el-icon v-else class="avatar-uploader-icon">
@@ -192,8 +192,8 @@ export default {
   },
   async created() {
     this.candidatesData.rows = (await CandidateService.getAll()).data.response;
-    console.log(this.candidatesData.rows)
     this.positions = (await PositionService.getAll()).data.response;
+    console.log(this.candidatesData.rows)
   },
   computed: {
     filterTableData() {
@@ -282,7 +282,9 @@ export default {
       await this.$refs.form.validate(async (valid, fields) => {
         if (valid) {
           console.log("valid");
+          this.$store.commit("animation/setFullscreenLoading", true);
           const res = await CandidateService.create(this.model);
+          this.$store.commit("animation/setFullscreenLoading", false);
           if (!res.data.error) {
             this.handleGetAll();
             this.closedialogForm();

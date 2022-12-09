@@ -4,6 +4,7 @@ import Dashboard from "@/pages/Dashboard.vue";
 import Notifications from "@/pages/Notifications.vue";
 import Icons from "@/pages/Icons.vue";
 import Login from "@/pages/login/index.vue";
+import Verify from "@/pages/veriry/index.vue";
 import Positions from "@/pages/positions/index.vue";
 import Candidates from "@/pages/candidates/index.vue";
 import Voters from "@/pages/voters/index.vue";
@@ -22,11 +23,17 @@ const routes = [
     path: "/login",
     name: "login",
     component: Login,
-    meta: {
-      middleware: [
-        AuthorizeGuest
-      ]
-    }
+    // meta: {
+    //   middleware: [
+    //     AuthorizeGuest
+    //   ]
+    // }
+  },
+  {
+    path: "/verify",
+    name: "verify",
+    component: Verify,
+    props: route => ({email: route.query.email , token: route.query.token})
   },
   {
     path: "/vote-system",

@@ -6,6 +6,8 @@ const controller= require('../controllers/voter.controller');
 // router.get('/get/:id', controller.get);
 router.get('', controller.getAll);
 router.post('', controller.createVoter);
-// router.put('/edit', controller.edit);
+router.delete('/:id', controller.delete)
+router.put('/:id', controller.edit);
+router.get('/verify', controller.verify);
 
 module.exports = router;

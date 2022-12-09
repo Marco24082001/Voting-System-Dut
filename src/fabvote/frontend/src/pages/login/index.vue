@@ -9,8 +9,8 @@
         ref="form"
         @submit.enter.prevent="login"
       >
-        <el-form-item prop="accountname">
-          <el-input v-model="model.accountname" placeholder="accountname" :prefix-icon="icon.user">
+        <el-form-item prop="email">
+          <el-input v-model="model.email" placeholder="email" :prefix-icon="icon.user">
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
@@ -29,13 +29,6 @@
             native-type="submit"
             block
           >Login</el-button>
-          <el-button
-            :loading="loading"
-            class="login-button"
-            type="primary"
-            native-type="submit"
-            block
-          >{{user.counter}}</el-button>
         </el-form-item>
         <a class="forgot-password" href="https://oxfordinformatics.com/">Forgot password ?</a>
       </el-form>
@@ -52,11 +45,11 @@ export default {
   data() {
     return {
       validCredentials: {
-        accountname: "lightscope",
+        email: "lightscope",
         password: "lightscope"
       },
       model: {
-        accountname: "admin@gmai.com",
+        email: "admin@gmai.com",
         password: "adminpw"
       },
       icon: {
@@ -65,15 +58,15 @@ export default {
       },
       loading: false,
       rules: {
-        accountname: [
+        email: [
           {
             required: true,
-            message: "accountname is required",
+            message: "email is required",
             trigger: "blur"
           },
           {
             min: 4,
-            message: "accountname length should be at least 5 characters",
+            message: "email length should be at least 5 characters",
             trigger: "blur"
           }
         ],

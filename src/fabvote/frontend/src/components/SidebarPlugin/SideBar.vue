@@ -71,7 +71,7 @@ export default {
       type: Array,
       default: () => [
         {
-          path: '/icons',
+          path: '/dashboard',
           name: 'Dashboard',
           icon: 'ti-panel'
         },

@@ -1,71 +1,37 @@
 <template>
   <div>
-
     <!--Stats cards-->
     <div class="row">
       <div class="col-md-6 col-xl-3" v-for="stats in statsCards" :key="stats.title">
         <stats-card>
-          <div class="icon-big text-center" :class="`icon-${stats.type}`" slot="header">
-            <i :class="stats.icon"></i>
-          </div>
-          <div class="numbers" slot="content">
+          <template v-slot:header>
+            <div class="icon-big text-center" :class="`icon-${stats.type}`">
+              <i :class="stats.icon"></i>
+            </div>
+          </template>
+          <template v-slot:content>
+            <div class="numbers">
             <p>{{stats.title}}</p>
-            {{stats.value}}
-          </div>
-          <div class="stats" slot="footer">
-            <i :class="stats.footerIcon"></i> {{stats.footerText}}
-          </div>
+              {{stats.value}}
+            </div>
+          </template>
+          <template v-slot:footer>
+            <div class="stats">
+              <i :class="stats.footerIcon"></i> {{stats.footerText}}
+            </div>
+          </template>
         </stats-card>
       </div>
     </div>
 
     <!--Charts-->
     <div class="row">
-
-      <div class="col-12">
-        <chart-card title="Users behavior"
-                    sub-title="24 Hours performance"
-                    :chart-data="usersChart.data"
-                    :chart-options="usersChart.options">
-          <span slot="footer">
-            <i class="ti-reload"></i> Updated 3 minutes ago
-          </span>
-          <div slot="legend">
-            <i class="fa fa-circle text-info"></i> Open
-            <i class="fa fa-circle text-danger"></i> Click
-            <i class="fa fa-circle text-warning"></i> Click Second Time
-          </div>
-        </chart-card>
-      </div>
-
-      <div class="col-md-6 col-12">
-        <chart-card title="Email Statistics"
-                    sub-title="Last campaign performance"
-                    :chart-data="preferencesChart.data"
-                    chart-type="Pie">
-          <span slot="footer">
-            <i class="ti-timer"></i> Campaign set 2 days ago</span>
-          <div slot="legend">
-            <i class="fa fa-circle text-info"></i> Open
-            <i class="fa fa-circle text-danger"></i> Bounce
-            <i class="fa fa-circle text-warning"></i> Unsubscribe
-          </div>
-        </chart-card>
-      </div>
-
-      <div class="col-md-6 col-12">
-        <chart-card title="2015 Sales"
-                    sub-title="All products including Taxes"
-                    :chart-data="activityChart.data"
-                    :chart-options="activityChart.options">
-          <span slot="footer">
-            <i class="ti-check"></i> Data information certified
-          </span>
-          <div slot="legend">
-            <i class="fa fa-circle text-info"></i> Tesla Model S
-            <i class="fa fa-circle text-warning"></i> BMW 5 Series
-          </div>
-        </chart-card>
+      <div v-for="(position, index) in positionsData" class="col-12 mt-5" :key="index" >
+        <BarChart
+          :position="position"
+          :votes="votesData"
+          :candidates="candidatesData"
+        />
       </div>
 
     </div>
@@ -73,122 +39,94 @@
   </div>
 </template>
 <script>
-import { StatsCard, ChartCard } from "@/components/index";
-import Chartist from 'chartist';
+import CandidateService from "@/services/candidate/candidate.services";
+import VoterService from "@/services/voter/voter.services";
+import PositionService from "@/services/position/position.services";
+import VoteService from "@/services/vote/vote.services";
+import { StatsCard } from "@/components/index";
+import BarChart from '@/components/Cards/BarChart.vue';
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
 export default {
   components: {
     StatsCard,
-    ChartCard
+    BarChart
   },
   /**
    * Chart data used to render stats, charts. Should be replaced with server data
    */
   data() {
     return {
+      positionsData: [],
+      candidatesData: [],
+      votersData: [],
+      votesData: [],
       statsCards: [
         {
           type: "warning",
-          icon: "ti-server",
-          title: "Capacity",
-          value: "105GB",
+          icon: "ti-package",
+          title: "Voters Voted",
+          value: "20",
           footerText: "Updated now",
           footerIcon: "ti-reload"
         },
         {
           type: "success",
-          icon: "ti-wallet",
-          title: "Revenue",
-          value: "$1,345",
-          footerText: "Last day",
-          footerIcon: "ti-calendar"
+          icon: "ti-user",
+          title: "No. of Candidates",
+          value: "6",
+          footerText: "Updated now",
+          footerIcon: "ti-reload"
         },
         {
           type: "danger",
-          icon: "ti-pulse",
-          title: "Errors",
+          icon: "ti-hand-open",
+          title: "Total Voters",
           value: "23",
-          footerText: "In the last hour",
-          footerIcon: "ti-timer"
+          footerText: "Updated now",
+          footerIcon: "ti-reload"
         },
         {
           type: "info",
-          icon: "ti-twitter-alt",
-          title: "Followers",
-          value: "+45",
+          icon: "ti-id-badge",
+          title: "No. of Positions",
+          value: "2",
           footerText: "Updated now",
           footerIcon: "ti-reload"
         }
-      ],
-      usersChart: {
-        data: {
-          labels: [
-            "9:00AM",
-            "12:00AM",
-            "3:00PM",
-            "6:00PM",
-            "9:00PM",
-            "12:00PM",
-            "3:00AM",
-            "6:00AM"
-          ],
-          series: [
-            [287, 385, 490, 562, 594, 626, 698, 895, 952],
-            [67, 152, 193, 240, 387, 435, 535, 642, 744],
-            [23, 113, 67, 108, 190, 239, 307, 410, 410]
-          ]
-        },
-        options: {
-          low: 0,
-          high: 1000,
-          showArea: true,
-          height: "245px",
-          axisX: {
-            showGrid: false
-          },
-          lineSmooth: Chartist.Interpolation.simple({
-            divisor: 3
-          }),
-          showLine: true,
-          showPoint: false
-        }
-      },
-      activityChart: {
-        data: {
-          labels: [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "Mai",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec"
-          ],
-          series: [
-            [542, 543, 520, 680, 653, 753, 326, 434, 568, 610, 756, 895],
-            [230, 293, 380, 480, 503, 553, 600, 664, 698, 710, 736, 795]
-          ]
-        },
-        options: {
-          seriesBarDistance: 10,
-          axisX: {
-            showGrid: false
-          },
-          height: "245px"
-        }
-      },
-      preferencesChart: {
-        data: {
-          labels: ["62%", "32%", "6%"],
-          series: [62, 32, 6]
-        },
-        options: {}
-      }
+      ]
     };
+  },
+
+  async created() {
+    this.candidatesData = (await CandidateService.getAll()).data.response;
+    this.votesData = (await VoteService.getAll()).data.response;
+    this.positionsData = (await PositionService.getAll()).data.response;
+    this.votersData = (await VoterService.getAll()).data.response;
+    this.loadCountItem();
+  },
+  computed: {
+    votersVoted() {
+      return this.votersData.filter(
+        (data) => data.voted === "true"
+      )
+    }
+  },
+  methods: {
+    loadCountItem: async function() {
+      this.statsCards[0].value = this.votersVoted.length;
+      this.statsCards[1].value = this.candidatesData.length;
+      this.statsCards[2].value = this.votersData.length;
+      this.statsCards[3].value = this.positionsData.length;
+    },
+    loadData: async function() {
+      this.candidatesData = (await CandidateService.getAll()).data.response;
+      this.votesData = (await VoteService.getAll()).data.response;
+      this.positionsData = (await PositionService.getAll()).data.response;
+      this.votersData = (await VoterService.getAll()).data.response;
+      this.loadCountItem();
+    }
   }
 };
 </script>
