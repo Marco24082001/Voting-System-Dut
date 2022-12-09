@@ -1,6 +1,6 @@
 <template>
     <div class="row justify-content-center">
-        <h1 v-if="'voted' === 'true'">Ban da vote !</h1>
+        <h1 v-if="voted === 'true'">Ban da vote !</h1>
         <div class="col-12" align="center">
             <el-card v-for="(ballot, index) in ballots" :key="index" class="box-card mt-4">
                 <template #header>
@@ -30,7 +30,6 @@
                     </el-card>
                 </el-space>
             </el-card>
-            <el-button type="primary" class="mt-4" @click="votedSubmit">Submit your votes</el-button>
             <el-button v-if="voted === 'false'" type="primary" class="mt-4" @click="votedSubmit">Submit your votes</el-button>
         </div>
     </div>
@@ -38,6 +37,8 @@
 
 <script>
 // const img_url = require('@/assets/img/vue-logo.png')
+import env from "../../../env";
+import io from 'socket.io-client';
 import BallotServices from "@/services/ballot/ballot.services";
 import AuthenticationServices from "@/services/authentication/authentication.services";
 import { ElMessage } from "element-plus";
@@ -45,6 +46,7 @@ import { ElMessage } from "element-plus";
 export default {
     data() {
         return {
+            socketInstance: "",
             ballots: [],
             voted: "false",
         }
@@ -56,6 +58,8 @@ export default {
         }
         const currentUser = (await AuthenticationServices.getCurrentUser()).data.response;
         this.voted = currentUser.voted;
+        // create socket
+        this.socketInstance = io(env.API_URL);
     },
     methods: {
         vote: function(event, index, candidateId) {
@@ -85,7 +89,6 @@ export default {
         },
 
         votedSubmit: async function() {
-            
             if(this.validate()) {
                 this.$store.commit("animation/setFullscreenLoading", true);
                 const res = await BallotServices.submitBallots(this.ballots);
@@ -93,6 +96,7 @@ export default {
                 if (!res.data.error) {
                     this.voted = 'true';
                     ElMessage.success("Vote successed !")
+                    this.socketInstance.emit("vote-success");
                 } else {
                     ElMessage.error(res.data.error);
                 }
