@@ -22,19 +22,15 @@ module.exports.getVotesHasVoted = async function(req, res) {
 
 module.exports.getAll = async function(req, res) {
   try {
-    console.log('thanhvi')
     const network = await gateway.getNetwork('fabvotechannel');
     const contract = network.getContract('fabvote');
     const results = JSON.parse(await contract.evaluateTransaction('readAllVotes'));
-    // console.log('thnashdi')
     for (const vote of results) {
-      console.log(vote)
-      // const position = JSON.parse(await contract.evaluateTransaction('readAsset', vote.positionId));
-      // const candidate = JSON.parse(await contract.evaluateTransaction('readAsset', vote.ownerId));
-      // vote.position = position;
-      // vote.candidate = candidate;
+      const position = JSON.parse(await contract.evaluateTransaction('readAsset', vote.positionId));
+      const candidate = JSON.parse(await contract.evaluateTransaction('readAsset', vote.ownerId));
+      vote.position = position;
+      vote.candidate = candidate;
     }
-    // console.log(results)
     return res.status(200).json({ response: results });
   } catch (error) {
     return res.json({ error : error })

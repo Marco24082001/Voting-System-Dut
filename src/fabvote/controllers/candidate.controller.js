@@ -47,7 +47,6 @@ module.exports.edit = async function(req, res) {
     const network = await gateway.getNetwork("fabvotechannel");
     const contract = network.getContract("fabvote");
     const { id, name, positionId, biography, imageUrl} = req.body;
-    console.log(positionId);
     await contract.submitTransaction("editCandidate", id, name, positionId, biography, imageUrl);
     return res.status(200).json({response: "success"})
   } catch (error) {
@@ -69,6 +68,5 @@ module.exports.delete = async function(req, res) {
 }
 
 module.exports.upload = async function(req, res) {
-  console.log(req.body);
   return res.status(200).json({ response: "success" });
 }

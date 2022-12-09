@@ -19,7 +19,6 @@ module.exports.createVoter = async function (req, res) {
   try {
     const voterId = uuidv4();
     const { name, email } = req.body;
-    console.log(name, email);
     const network = await gateway.getNetwork("fabvotechannel");
     const contract = network.getContract("fabvote");
     const password = "voterpw";
@@ -30,7 +29,6 @@ module.exports.createVoter = async function (req, res) {
         <h2>click in this <a href="${process.env.APP_FRONTEND_URL}/verify?email=${email}&token=${hashedEmail}">link</a> to set password</h2>
       `
       mailer.sendMail(email, "Bạn đã có quyền bầu cử, làm theo các bước sau để bầu cử", html_content);
-      console.log(html_content);
     })
     res.send("Transaction has been submitted");
   } catch (error) {
@@ -95,13 +93,9 @@ module.exports.verify = async function (req, res) {
   try {
     const network = await gateway.getNetwork("fabvotechannel");
     const contract = network.getContract("fabvote");
-    console.log(req.query.token);
     const isValid = await compareEmail(req.query.email, req.query.token);
     if (isValid) {
-      let voter = 'sdfsdf';
-      console.log(voter);
       voter = JSON.parse( await contract.evaluateTransaction("readVoterByEmail", req.query.email))[0];
-      console.log(voter);
       await contract.submitTransaction("editVoter", voter.id, voter.name, voter.email, req.query.password, voter.voted, true)
       return res.json({ response: 'success' })
     }

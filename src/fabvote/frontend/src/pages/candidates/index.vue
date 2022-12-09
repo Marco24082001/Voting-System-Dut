@@ -277,11 +277,9 @@ export default {
       }
     },
     handleCreate: async function () {
-      console.log(this.model);
       console.log(this.$refs.form);
       await this.$refs.form.validate(async (valid, fields) => {
         if (valid) {
-          console.log("valid");
           this.$store.commit("animation/setFullscreenLoading", true);
           const res = await CandidateService.create(this.model);
           this.$store.commit("animation/setFullscreenLoading", false);

@@ -49,11 +49,9 @@ module.exports.submitBallots = async function (req, res) {
     const user = JSON.parse(await contract.evaluateTransaction('readAsset', req.user.id));
     if (user.voted === "false") {
       const ballots = req.body;
-      console.log(ballots)
       for (const ballot of ballots) {
         for (const voted_candidate of ballot.voted_candidates) {
           const id = uuidv4();
-          console.log(id, voted_candidate);
           await contract.submitTransaction('createVote', id, voted_candidate, ballot.position.id);
         }
       }

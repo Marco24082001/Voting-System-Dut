@@ -23,7 +23,6 @@ module.exports.getAll = async function(req, res) {
     const network = await gateway.getNetwork('fabvotechannel');
     const contract = network.getContract('fabvote');
     const results = await contract.evaluateTransaction('readAllElections');
-    console.log(JSON.parse(results));
     // console.log(`Transaction has been evaluated, result is: ${results.toString()}`);
     res.status(200).json({response: JSON.parse(results)});
   } catch(err) {
