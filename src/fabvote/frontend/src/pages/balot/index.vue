@@ -1,6 +1,6 @@
 <template>
     <div class="row justify-content-center">
-        <div class="col-12">
+        <div class="col-12" align="center">
             <el-card v-for="ballot in ballots" class="box-card mt-4">
                 <template #header>
                     <div class="card-header">

@@ -1,6 +1,13 @@
 <template>
   <div>
     <!--Stats cards-->
+    <el-row class="mb-4">
+      <el-col :span="24" align="right">
+        <el-button type="danger" @click="refresh">
+          Refresh
+        </el-button>
+      </el-col>
+    </el-row>
     <div class="row">
       <div class="col-md-6 col-xl-3" v-for="stats in statsCards" :key="stats.title">
         <stats-card>
@@ -43,6 +50,7 @@ import CandidateService from "@/services/candidate/candidate.services";
 import VoterService from "@/services/voter/voter.services";
 import PositionService from "@/services/position/position.services";
 import VoteService from "@/services/vote/vote.services";
+import ElectionService from "@/services/election/election.services";
 import { StatsCard } from "@/components/index";
 import BarChart from '@/components/Cards/BarChart.vue';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
@@ -126,6 +134,11 @@ export default {
       this.positionsData = (await PositionService.getAll()).data.response;
       this.votersData = (await VoterService.getAll()).data.response;
       this.loadCountItem();
+    },
+    refresh: async function() {
+      this.$store.commit("animation/setFullscreenLoading", true);
+      await ElectionService.reset();
+      this.$store.commit("animation/setFullscreenLoading", false);
     }
   }
 };

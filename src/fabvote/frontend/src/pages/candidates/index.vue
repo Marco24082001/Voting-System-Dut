@@ -12,7 +12,9 @@
           </el-table-column>
           <el-table-column label="Name" prop="name" sortable />
           <el-table-column label="Position" prop="position.name" sortable />
-          <el-table-column label="Biography" prop="biography" />
+          <el-table-column label="Biography" prop="biography">
+
+          </el-table-column>
           <el-table-column align="right">
             <template #header>
               <el-input v-model="search" size="small" placeholder="Type to search" />
@@ -30,7 +32,7 @@
       <el-dialog v-model="dialogFormVisible" title="Candidates Dialog">
         <el-form class="login-form" label-position="left" label-width="6rem" :model="model" :rules="rules" ref="form">
           <el-form-item prop="imageUrl" label="Avatar">
-            <el-upload class="avatar-uploader" action="http://localhost:3000/candidates/upload" :show-file-list="false"
+            <el-upload class="avatar-uploader" :action="uploadImageUrl" :show-file-list="false"
               :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
               <img v-if="model.imageUrl" :src="model.imageUrl" class="avatar" />
               <el-icon v-else class="avatar-uploader-icon">
@@ -43,8 +45,9 @@
             </el-input>
           </el-form-item>
           <el-form-item prop="biography" label="Biography">
-            <el-input v-model="model.biography" placeholder="Input biography">
-            </el-input>
+            <!-- <el-input v-model="model.biography" placeholder="Input biography">
+            </el-input> -->
+            <QuillEditor v-model:content="this.model.biography"></QuillEditor>
           </el-form-item>
           <el-form-item prop="positionId" label="Position">
             <el-select v-model="model.positionId" placeholder="please select position">
@@ -65,10 +68,13 @@
 </template>
 
 <script>
+import env from "../../../env";
 import CandidateService from "@/services/candidate/candidate.services";
 import PositionService from "@/services/position/position.services";
+import { QuillEditor } from "@vueup/vue-quill";
 import { uploadImage } from "@/utils/cloudinaryUtils";
 import { ElMessage } from 'element-plus'
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import { Plus } from '@element-plus/icons-vue'
 const tableColumns = ["Id", "Name", "Salary", "Country", "City"];
 const tableData = [
@@ -146,10 +152,12 @@ const tableData = [
 
 export default {
   components: {
+    QuillEditor,
     Plus
   },
   data() {
     return {
+      uploadImageUrl: `${env.API_URL}/candidates/upload`,
       table1: {
         title: "Candidates table",
         subTitle: "All candidates",
@@ -193,7 +201,6 @@ export default {
   async created() {
     this.candidatesData.rows = (await CandidateService.getAll()).data.response;
     this.positions = (await PositionService.getAll()).data.response;
-    console.log(this.candidatesData.rows)
   },
   computed: {
     filterTableData() {
@@ -231,7 +238,7 @@ export default {
       this.dialogFormVisible = true;
       this.editId = row.id;
       this.model.name = row.name;
-      this.model.biography = row.biography;
+      this.model.biography = JSON.stringify(row.biography);
       this.model.positionId = row.position.id;
       this.model.imageUrl = row.imageUrl;
     },
@@ -250,17 +257,20 @@ export default {
       // await this.$refs.form 
       await this.$refs.form.validate(async (valid, fields) => {
         if (valid) {
-          console.log("valid");
-          console.log(this.model);
-          try {
-            const { url } = await uploadImage(this.rawFileImage);
-            this.model.imageUrl = url;
-          } catch (error) {
-            ElMessage.error('Upload image fail!');
-            return
+          this.model.biography = JSON.stringify(this.model.biography);
+          if (this.rawFileImage !== "") {
+            console.log('upload image')
+            try {
+              const { url } = await uploadImage(this.rawFileImage);
+              this.model.imageUrl = url;
+            } catch (error) {
+              ElMessage.error('Upload image fail!');
+              return
+            }
           }
+          this.$store.commit("animation/setFullscreenLoading", true);
           const res = await CandidateService.edit({ id: this.editId, ...this.model });
-          console.log(res);
+          this.$store.commit("animation/setFullscreenLoading", false);
           if (!res.data.error) {
             this.handleGetAll();
             this.closedialogForm();
@@ -269,18 +279,21 @@ export default {
           console.log("invalid");
         }
       });
+      this.rawFileImage = "";
     },
     handleDelete: async function (index, row) {
+      this.$store.commit("animation/setFullscreenLoading", true);
       const res = await PositionService.delete(row.id);
+      this.$store.commit("animation/setFullscreenLoading", false);
       if (!res.data.error) {
         this.handleGetAll();
       }
     },
     handleCreate: async function () {
-      console.log(this.$refs.form);
       await this.$refs.form.validate(async (valid, fields) => {
         if (valid) {
           this.$store.commit("animation/setFullscreenLoading", true);
+          this.model.biography = JSON.stringify(this.model.biography);
           const res = await CandidateService.create(this.model);
           this.$store.commit("animation/setFullscreenLoading", false);
           if (!res.data.error) {

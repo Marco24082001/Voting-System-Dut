@@ -21,9 +21,8 @@ class Fabvote extends Contract {
         const elections = [
             {
                 name: 'Default election',
-                start_time: (new Date()).toLocaleString(),
-                end_time: (new Date(new Date().getDate() + 1)).toLocaleString(),
-                active: "false"
+                start_date: (new Date()).toLocaleString(),
+                duration: 30
             }
         ];
         const positions = [
@@ -216,14 +215,6 @@ class Fabvote extends Contract {
     }
 
     // Election Configure
-    async readElection(ctx, id) {
-        const electionAsBytes = await ctx.stub.getState(id);
-        if (!electionAsBytes || electionAsBytes.length === 0) {
-            throw new Error(`${id} does not exist`);
-        }
-        return electionAsBytes.toString();
-    }
-
     async readAllElections(ctx) {
         const startKey = 'ELECTION';
         const endKey = 'ELECTIONz';
@@ -244,7 +235,7 @@ class Fabvote extends Contract {
     }
 
 
-    async editElection(ctx, id, name, start_date, end_date, active) {
+    async editElection(ctx, id, name, start_date, duration) {
         console.info('============= START : editElection ===========');
         const electionAsBytes = await ctx.stub.getState(id);
         if (!electionAsBytes || electionAsBytes.length === 0) {
@@ -253,10 +244,20 @@ class Fabvote extends Contract {
         const election = JSON.parse(electionAsBytes.toString());
         election.name = name;
         election.start_date = start_date
-        election.end_date = end_date
-        election.active = active
+        election.duration = parseInt(duration)
         await ctx.stub.putState(id, Buffer.from(JSON.stringify(election)));
         console.info('============= END : editElection ===========');
+    }
+
+    async resetElection(ctx) {
+        const assets = JSON.parse(await this.readAllAssets(ctx));
+        for(const asset of assets) {
+            if( (asset.id.includes('ADMIN') == false) && (asset.id.includes('ELECTION') == false)){
+                await this.deleteAsset(ctx, asset.id);
+            }
+            // await this.deleteAsset(ctx, asset.id);
+        }
+        return 'true'
     }
 
     // Position
@@ -613,6 +614,24 @@ class Fabvote extends Contract {
         return assetAsBytes.toString();
     }
 
+    async readAllAssets(ctx) {
+        const startKey = '';
+        const endKey = '';
+        const allResults = [];
+        for await (const {key, value} of ctx.stub.getStateByRange(startKey, endKey)) {
+            const strValue = Buffer.from(value).toString('utf8');
+            let record;
+            try {
+                record = JSON.parse(strValue);
+            } catch (err) {
+                console.log(err);
+                record = strValue;
+            }
+            allResults.push(record);
+        }
+        return JSON.stringify(allResults);
+    }
+
     async assetExists(ctx, id) {
         const assetAsBytes = await ctx.stub.getState(id);
         return assetAsBytes && assetAsBytes.length > 0;
@@ -665,7 +684,6 @@ class Fabvote extends Contract {
 					}
                     allResults.push(jsonRes.Record);
 				}
-				
 			}
 			res = await iterator.next();
 		}
@@ -674,7 +692,6 @@ class Fabvote extends Contract {
 	}
 
     async GetQueryResultForQueryString(ctx, queryString) {
-
 		let resultsIterator = await ctx.stub.getQueryResult(queryString);
 		let results = await this._GetAllResults(resultsIterator, false);
 		return JSON.stringify(results);

@@ -5,16 +5,15 @@ module.exports.get = async function(req, res) {
   try {
     const network = await gateway.getNetwork('fabvotechannel');
     const contract = network.getContract('fabvote');
-    const electionId = req.params.id;
-    // console.log(req.query.id);
-    let result = await contract.evaluateTransaction('readElection', electionId);
+    let result = await contract.evaluateTransaction('readAllElections');
     result = JSON.parse(result)
-    // console.log(result.maximum);
     res.json({
-      result: result
+      response: result[0]
     })
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    res.json({
+      error: error
+    })
   }
 }
 
@@ -24,10 +23,10 @@ module.exports.getAll = async function(req, res) {
     const contract = network.getContract('fabvote');
     const results = await contract.evaluateTransaction('readAllElections');
     // console.log(`Transaction has been evaluated, result is: ${results.toString()}`);
-    res.status(200).json({response: JSON.parse(results)});
-  } catch(err) {
+    res.status(200).json({response: JSON.parse(results)[0]});
+  } catch(error) {
     res.json({
-      err: err
+      error: error
     })
   }
 }
@@ -36,13 +35,26 @@ module.exports.edit = async function(req, res) {
   try {
     const network = await gateway.getNetwork('fabvotechannel');
     const contract = network.getContract('fabvote');
-    const { id, name, start_time, end_time} = req.body;
-    await contract.submitTransaction('editElection', id, name, start_time, end_time);
+    const { id, name, start_date, duration} = req.body;
+    await contract.submitTransaction('editElection', id, name, start_date, duration);
     console.log('Transaction has been submitted');
     res.status(200).json({response: 'success'})
-  } catch(e) {
+  } catch(error) {
     res.json({
-      err: err
+      error: error
+    })
+  }
+}
+
+module.exports.reset = async function(req, res) {
+  try {
+    const network = await gateway.getNetwork('fabvotechannel');
+    const contract = network.getContract('fabvote');
+    await contract.submitTransaction('resetElection');
+    res.status(200).json({response: 'success'});
+  } catch(error) {
+    res.json({
+      error: error
     })
   }
 }

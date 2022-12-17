@@ -13,6 +13,7 @@
             </template>
             <template #default="scope">
               <el-button size="small" @click="handleDialogEdit(scope.$index, scope.row)">Edit</el-button>
+              <!-- <el-button size="small" @click="handleDialogEdit(scope.$index, scope.row)">History</el-button> -->
               <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
             </template>
           </el-table-column>
@@ -54,6 +55,7 @@
 
 <script>
 import VoterService from '@/services/voter/voter.services';
+import CommonService from '@/services/common/common.services';
 export default {
   data() {
     return {
@@ -162,6 +164,11 @@ export default {
         this.handleGetAll();
       }
       this.$store.commit("animation/setFullscreenLoading", false);
+    },
+
+    handleHistory: async function (index, row) {
+      const res = await CommonService.getHistory(row.id);
+      console.log(res);
     },
 
     closedialogForm: function() {
