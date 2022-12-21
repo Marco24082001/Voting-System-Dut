@@ -673,7 +673,7 @@ class Fabvote extends Contract {
 						console.log(err);
 						jsonRes.Value = res.value.value.toString('utf8');
 					}
-                    allResults.push(jsonRes.Value);
+                    allResults.push(jsonRes);
 				} else {
 					jsonRes.Key = res.value.key;
 					try {

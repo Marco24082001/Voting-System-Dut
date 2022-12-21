@@ -68,11 +68,12 @@ module.exports.edit = async function (req, res) {
   try {
     const network = await gateway.getNetwork("fabvotechannel");
     const contract = network.getContract("fabvote");
-    const { id, name, email, password, hasVoted } = req.body;
-    await contract.submitTransaction("editVoter", id, name, email, password, hasVoted);
+    const { id, name, email, password, voted, verified } = req.body;
+    await contract.submitTransaction("editVoter", id, name, email, password, voted, verified);
     console.log("Transaction has been submitted");
     res.status(200).json({ response: "success" })
   } catch (error) {
+    console.log(error);
     return res.json({ error: error })
   }
 }

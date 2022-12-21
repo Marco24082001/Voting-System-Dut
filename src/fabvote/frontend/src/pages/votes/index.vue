@@ -13,12 +13,20 @@
         </el-table>
       </card>
     </div>
+    <el-dialog v-model="dialogHistoryVisible" title="History" width="60vw">
+      <el-table :data="voteHistory" style="width: 100%" max-height="50vh">
+        <el-table-column label="Time" prop="Timestamp" sortable />
+        <el-table-column label="Candidate" prop="Value.candidateId" sortable />
+        <el-table-column label="Position" prop="Value.positionId" sortable />
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import VoteService from "@/services/vote/vote.services";
-// import { ElMessage } from 'element-plus'
+import CommonService from '@/services/common/common.services';
+import { timeConverter } from "@/utils/dateTimeUtils";
 export default {
   data() {
     return {
@@ -29,6 +37,8 @@ export default {
       votesData: {
         rows: [],
       },
+      voteHistory: [],
+      dialogHistoryVisible: false,
       search: '',
     }
   },
@@ -46,13 +56,21 @@ export default {
     }
   },
   methods: {
-    handleGetAll: async function() {
+    handleGetAll: async function () {
       const res = await VoteService.getAll();
       if (!res.data.error) {
         this.votesData.rows = res.data.response;
         console(this.votesData.rows);
       }
-    }
+    },
+    handleHistory: async function (index, row) {
+      const res = await CommonService.getHistory(row.id);
+      this.voteHistory = res.data.response;
+      for (const vote of this.voteHistory) {
+        vote.Timestamp = timeConverter(vote.Timestamp.seconds).toLocaleString();
+      }
+      this.dialogHistoryVisible = true;
+    },
   }
 }
 </script>

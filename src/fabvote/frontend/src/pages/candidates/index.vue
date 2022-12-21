@@ -21,6 +21,7 @@
             </template>
             <template #default="scope">
               <el-button size="small" @click="handleDialogEdit(scope.$index, scope.row)">Edit</el-button>
+              <el-button size="small" type="info" @click="handleHistory(scope.$index, scope.row)">History</el-button>
               <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
             </template>
           </el-table-column>
@@ -45,9 +46,9 @@
             </el-input>
           </el-form-item>
           <el-form-item prop="biography" label="Biography">
-            <!-- <el-input v-model="model.biography" placeholder="Input biography">
-            </el-input> -->
-            <QuillEditor v-model:content="this.model.biography"></QuillEditor>
+            <el-input v-model="model.biography" placeholder="Input biography">
+            </el-input>
+            <!-- <QuillEditor v-model:content="this.model.biography"></QuillEditor> -->
           </el-form-item>
           <el-form-item prop="positionId" label="Position">
             <el-select v-model="model.positionId" placeholder="please select position">
@@ -63,6 +64,21 @@
           </span>
         </template>
       </el-dialog>
+      <el-dialog v-model="dialogHistoryVisible" title="History" width="60vw">
+        <el-table :data="candidateHistory" style="width: 100%" max-height="50vh">
+          <el-table-column label="Time" prop="Timestamp" sortable />
+          <el-table-column label="Photo">
+            <template #default="scope">
+              <el-avatar :size="120" shape="square">
+                <img :src=scope.row.Value.imageUrl />
+              </el-avatar>
+            </template>
+          </el-table-column>
+          <el-table-column label="Name" prop="Value.name" sortable />
+          <el-table-column label="PositionId" prop="Value.positionId" sortable />
+          <el-table-column label="Biography" prop="Value.biography"/>
+        </el-table>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -71,6 +87,8 @@
 import env from "../../../env";
 import CandidateService from "@/services/candidate/candidate.services";
 import PositionService from "@/services/position/position.services";
+import CommonService from '@/services/common/common.services';
+import { timeConverter } from "@/utils/dateTimeUtils";
 import { QuillEditor } from "@vueup/vue-quill";
 import { uploadImage } from "@/utils/cloudinaryUtils";
 import { ElMessage } from 'element-plus'
@@ -167,10 +185,12 @@ export default {
       candidatesData: {
         rows: [],
       },
+      candidateHistory: [],
       positions: [],
       search: "",
       dialogFormVisible: false,
       dialogFormStatus: "create",
+      dialogHistoryVisible: false,
       rawFileImage: "",
       validCredentials: {
         positionname: "DB HD quan tri",
@@ -304,6 +324,14 @@ export default {
           console.log("invalid");
         }
       });
+    },
+    handleHistory: async function (index, row) {
+      const res = await CommonService.getHistory(row.id);
+      this.candidateHistory = res.data.response;
+      for(const candidate of this.candidateHistory) {
+        candidate.Timestamp = timeConverter(candidate.Timestamp.seconds).toLocaleString();
+      }
+      this.dialogHistoryVisible = true;
     },
     closedialogForm: function () {
       this.$refs.form.resetFields();

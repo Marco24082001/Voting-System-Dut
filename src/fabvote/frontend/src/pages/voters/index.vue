@@ -13,7 +13,7 @@
             </template>
             <template #default="scope">
               <el-button size="small" @click="handleDialogEdit(scope.$index, scope.row)">Edit</el-button>
-              <!-- <el-button size="small" @click="handleDialogEdit(scope.$index, scope.row)">History</el-button> -->
+              <el-button size="small" type="info" @click="handleHistory(scope.$index, scope.row)">History</el-button>
               <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
             </template>
           </el-table-column>
@@ -22,7 +22,7 @@
       </card>
     </div>
     <div class="col-12">
-      <el-dialog v-model="dialogFormVisible" title="Candidates Dialog" width="50vw">
+      <el-dialog v-model="dialogFormVisible" title="Voter Dialog" width="50vw">
         <el-form class="login-form" label-position="left" label-width="6rem" :model="model" :rules="rules" ref="form">
           <el-form-item prop="email" label="Email">
             <el-input v-model="model.email" placeholder="Email">
@@ -49,6 +49,15 @@
             </span>
           </template>
       </el-dialog>
+      <el-dialog v-model="dialogHistoryVisible" title="History" width="60vw">
+        <el-table :data="voterHistory" style="width: 100%" max-height="50vh">
+          <el-table-column label="Time" prop="Timestamp" sortable />
+          <el-table-column label="Name" prop="Value.name" sortable />
+          <el-table-column label="Email" prop="Value.email" sortable />
+          <el-table-column label="Voted" prop="Value.voted" sortable />
+          <el-table-column label="Verified" prop="Value.verified" sortable />
+        </el-table>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -56,12 +65,15 @@
 <script>
 import VoterService from '@/services/voter/voter.services';
 import CommonService from '@/services/common/common.services';
+import { timeConverter } from "@/utils/dateTimeUtils";
+
 export default {
   data() {
     return {
       votersData: {
         rows: [],
       },
+      voterHistory: [],
       table1: {
         title: "Voters table",
         subTitle: "All voters",
@@ -70,9 +82,12 @@ export default {
       dialogFormVisible: false,
       dialogFormStatus: "create",
       dialogFormVisible: false,
+      dialogHistoryVisible: false,
       model: {
         email: "",
         name: "",
+        password: "",
+        voted: "",
       },
       editId: "",
       rules: {
@@ -106,8 +121,7 @@ export default {
       this.dialogFormStatus = "edit";
       this.dialogFormVisible = true;
       this.editId = row.id;
-      this.model.name = row.name;
-      this.model.email = row.email;
+      this.model = {...row}
     },
 
     handleDialogCreate: function() {
@@ -121,7 +135,7 @@ export default {
       if (!res.data.error) {
         this.votersData.rows = res.data.response;
       }
-      console.log(res.data.response);
+      console.log(res.data.response); 
     },
 
     handleCreate: async function () {
@@ -150,6 +164,7 @@ export default {
       }
       this.$store.commit("animation/setFullscreenLoading", true);
       const res = await VoterService.edit({ id:this.editId, ...this.model});
+      console.log(res);
       if (!res.data.error) {
         this.handleGetAll();
         this.closedialogForm();
@@ -168,7 +183,11 @@ export default {
 
     handleHistory: async function (index, row) {
       const res = await CommonService.getHistory(row.id);
-      console.log(res);
+      this.voterHistory = res.data.response;
+      for(const voter of this.voterHistory) {
+        voter.Timestamp = timeConverter(voter.Timestamp.seconds).toLocaleString();
+      }
+      this.dialogHistoryVisible = true;
     },
 
     closedialogForm: function() {

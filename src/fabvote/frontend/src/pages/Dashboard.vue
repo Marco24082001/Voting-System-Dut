@@ -53,6 +53,7 @@ import VoteService from "@/services/vote/vote.services";
 import ElectionService from "@/services/election/election.services";
 import { StatsCard } from "@/components/index";
 import BarChart from '@/components/Cards/BarChart.vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
@@ -136,9 +137,19 @@ export default {
       this.loadCountItem();
     },
     refresh: async function() {
-      this.$store.commit("animation/setFullscreenLoading", true);
-      await ElectionService.reset();
-      this.$store.commit("animation/setFullscreenLoading", false);
+      ElMessageBox.alert('Do you want refresh to start a new election', 'Refresh', {
+        confirmButtonText: 'OK',
+        callback: async () => {
+          this.$store.commit("animation/setFullscreenLoading", true);
+          await ElectionService.reset();
+          this.$store.commit("animation/setFullscreenLoading", false);
+          ElMessage({
+            type: 'info',
+            message: `success`,
+          })
+        }
+      })
+      
     }
   }
 };
