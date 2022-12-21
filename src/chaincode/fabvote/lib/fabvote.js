@@ -121,7 +121,6 @@ class Fabvote extends Contract {
                 voted: "false",
                 verified: "true",
             },
-            
         ];
 
         const votes = [

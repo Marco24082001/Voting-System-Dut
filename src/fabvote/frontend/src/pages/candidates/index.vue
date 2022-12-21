@@ -75,7 +75,7 @@
             </template>
           </el-table-column>
           <el-table-column label="Name" prop="Value.name" sortable />
-          <el-table-column label="PositionId" prop="Value.positionId" sortable />
+          <el-table-column label="PositionId" prop="Value.position.name" sortable />
           <el-table-column label="Biography" prop="Value.biography"/>
         </el-table>
       </el-dialog>
@@ -330,8 +330,13 @@ export default {
       this.candidateHistory = res.data.response;
       for(const candidate of this.candidateHistory) {
         candidate.Timestamp = timeConverter(candidate.Timestamp.seconds).toLocaleString();
+        const position = this.positions.find(item => {
+          return item.id === candidate.Value.positionId
+        })
+        candidate.Value.position = position;
       }
       this.dialogHistoryVisible = true;
+      console.log(this.candidateHistory);
     },
     closedialogForm: function () {
       this.$refs.form.resetFields();

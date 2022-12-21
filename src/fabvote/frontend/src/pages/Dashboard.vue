@@ -3,9 +3,12 @@
     <!--Stats cards-->
     <el-row class="mb-4">
       <el-col :span="24" align="right">
-        <el-button type="danger" @click="refresh">
-          Refresh
-        </el-button>
+        <el-popconfirm confirm-button-text="Yes" cancel-button-text="No" :icon="InfoFilled" width="150" icon-color="#626AEF"
+          title="Are you sure refresh to start a new election?" @confirm="refresh">
+          <template #reference>
+            <el-button type="danger">Refresh</el-button>
+          </template>
+        </el-popconfirm>
       </el-col>
     </el-row>
     <div class="row">
@@ -18,13 +21,13 @@
           </template>
           <template v-slot:content>
             <div class="numbers">
-            <p>{{stats.title}}</p>
-              {{stats.value}}
+              <p>{{ stats.title }}</p>
+              {{ stats.value }}
             </div>
           </template>
           <template v-slot:footer>
             <div class="stats">
-              <i :class="stats.footerIcon"></i> {{stats.footerText}}
+              <i :class="stats.footerIcon"></i> {{ stats.footerText }}
             </div>
           </template>
         </stats-card>
@@ -33,12 +36,8 @@
 
     <!--Charts-->
     <div class="row">
-      <div v-for="(position, index) in positionsData" class="col-12 mt-5" :key="index" >
-        <BarChart
-          :position="position"
-          :votes="votesData"
-          :candidates="candidatesData"
-        />
+      <div v-for="(position, index) in positionsData" class="col-12 mt-5" :key="index">
+        <BarChart :position="position" :votes="votesData" :candidates="candidatesData" />
       </div>
 
     </div>
@@ -123,36 +122,31 @@ export default {
     }
   },
   methods: {
-    loadCountItem: async function() {
+    loadCountItem: async function () {
       this.statsCards[0].value = this.votersVoted.length;
       this.statsCards[1].value = this.candidatesData.length;
       this.statsCards[2].value = this.votersData.length;
       this.statsCards[3].value = this.positionsData.length;
     },
-    loadData: async function() {
+    loadData: async function () {
       this.candidatesData = (await CandidateService.getAll()).data.response;
       this.votesData = (await VoteService.getAll()).data.response;
       this.positionsData = (await PositionService.getAll()).data.response;
       this.votersData = (await VoterService.getAll()).data.response;
       this.loadCountItem();
     },
-    refresh: async function() {
-      ElMessageBox.alert('Do you want refresh to start a new election', 'Refresh', {
-        confirmButtonText: 'OK',
-        callback: async () => {
-          this.$store.commit("animation/setFullscreenLoading", true);
-          await ElectionService.reset();
-          this.$store.commit("animation/setFullscreenLoading", false);
-          ElMessage({
-            type: 'info',
-            message: `success`,
-          })
-        }
+    refresh: async function () {
+      this.$store.commit("animation/setFullscreenLoading", true);
+      await ElectionService.reset();
+      this.$store.commit("animation/setFullscreenLoading", false);
+      ElMessage({
+        type: 'info',
+        message: `success`,
       })
-      
     }
   }
 };
 </script>
 <style>
+
 </style>

@@ -4,13 +4,13 @@
             <el-card v-for="ballot in ballots" class="box-card mt-4">
                 <template #header>
                     <div class="card-header">
-                        <span>{{ballot.position.name}}</span>
-                        <span>Được vote tối đa {{ballot.position.maximum}} cử tri</span>
-                        <el-button class="button" text>Hide</el-button>
+                        <span>{{ ballot.position.name }}</span>
+                        <span>You can vote up to {{ ballot.position.maximum }} people</span>
+                        <!-- <el-button class="button" text>Hide</el-button> -->
                     </div>
                 </template>
                 <div class="row">
-                    
+
                 </div>
                 <!-- <el-avatar shape="square" :size="300" :fit="images.fits[1]" :src="images.url" /> -->
                 <!-- <img src="../../assets/logo.png" alt=""> -->
@@ -18,8 +18,14 @@
                     <el-card v-for="candidate in ballot.candidates" :key="candidate.id" class="box-card" shadow="hover">
                         <template #header>
                             <div class="card-header">
-                            <span>{{candidate.name}}</span>
-                            <el-button class="button ml-4" type="primary" text>Tiểu sử</el-button>
+                                <span>{{ candidate.name }}</span>
+                                <el-popover placement="top" title="Biography" :width="300" trigger="hover"
+                                    :content="candidate.biography">
+                                    <template #reference>
+                                        <!-- <el-button class="m-2">Hover to activate</el-button> -->
+                                        <el-button class="button ml-4" type="primary" text>Biography</el-button>
+                                    </template>
+                                </el-popover>
                             </div>
                         </template>
                         <el-avatar shape="square" :size="300" :fit="images.fits[1]" :src="candidate.imageUrl" />
@@ -28,7 +34,7 @@
                         </div>
                     </el-card>
                 </el-space>
-            </el-card>            
+            </el-card>
         </div>
     </div>
 </template> 
@@ -56,5 +62,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import './style.scss';
+@import './style.scss';
 </style>

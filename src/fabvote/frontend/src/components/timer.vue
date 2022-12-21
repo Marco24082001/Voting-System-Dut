@@ -24,7 +24,7 @@ export default {
         const hours = ref(0);
         const minutes = ref(0);
         const seconds = ref(0);
-        const message = ref('Duration');
+        const message = ref("Time's up!");
         
         setInterval(() => {
             const currDate = new Date();
@@ -34,14 +34,16 @@ export default {
                 minutes.value = parseInt(seconds.value / 60);
                 hours.value = parseInt(minutes.value / 60);
                 days.value = parseInt(hours.value / 24); 
-                message.value = "Voting start after !!!!!!!";
+                message.value = "Voting start soon!";
             } else if (props.end_date.getTime() > currDate.getTime()) {
                 const voteTime = props.end_date - currDate;
                 seconds.value = parseInt(voteTime / 1000);
                 minutes.value = parseInt(seconds.value / 60);
                 hours.value = parseInt(minutes.value / 60);
                 days.value = parseInt(hours.value / 24);
-                message.value = "Duration";
+                message.value = "Count down!";
+            } else {
+                message.value = "Time's up!"
             }
         }, 1000);
         return {days, hours, minutes, seconds, message}

@@ -9,6 +9,9 @@
             <template #header>
               <el-input v-model="search" size="small" placeholder="Type to search" />
             </template>
+            <template #default="scope">
+              <el-button size="small" type="info" @click="handleHistory(scope.$index, scope.row)">History</el-button>
+            </template>
           </el-table-column>
         </el-table>
       </card>
@@ -16,8 +19,8 @@
     <el-dialog v-model="dialogHistoryVisible" title="History" width="60vw">
       <el-table :data="voteHistory" style="width: 100%" max-height="50vh">
         <el-table-column label="Time" prop="Timestamp" sortable />
-        <el-table-column label="Candidate" prop="Value.candidateId" sortable />
-        <el-table-column label="Position" prop="Value.positionId" sortable />
+        <el-table-column label="Candidate" prop="Value.owner.name" sortable />
+        <el-table-column label="Position" prop="Value.position.name" sortable />
       </el-table>
     </el-dialog>
   </div>
@@ -25,6 +28,8 @@
 
 <script>
 import VoteService from "@/services/vote/vote.services";
+import CandidateService from "@/services/candidate/candidate.services";
+import PositionService from "@/services/position/position.services";
 import CommonService from '@/services/common/common.services';
 import { timeConverter } from "@/utils/dateTimeUtils";
 export default {
@@ -37,6 +42,8 @@ export default {
       votesData: {
         rows: [],
       },
+      positions: [],
+      candidates: [],
       voteHistory: [],
       dialogHistoryVisible: false,
       search: '',
@@ -44,7 +51,8 @@ export default {
   },
   async created() {
     this.votesData.rows = (await VoteService.getAll()).data.response;
-    console.log(this.votesData.rows)
+    this.candidates = (await CandidateService.getAll()).data.response;
+    this.positions = (await PositionService.getAll()).data.response;
   },
   computed: {
     filterTableData() {
@@ -68,7 +76,16 @@ export default {
       this.voteHistory = res.data.response;
       for (const vote of this.voteHistory) {
         vote.Timestamp = timeConverter(vote.Timestamp.seconds).toLocaleString();
+        const position = this.positions.find(item => {
+          return item.id === vote.Value.positionId
+        })
+        const candidate = this.candidates.find(item => {
+          return item.id === vote.Value.ownerId
+        })
+        vote.Value.position = position;
+        vote.Value.owner = candidate;
       }
+      console.log(this.voteHistory);
       this.dialogHistoryVisible = true;
     },
   }
