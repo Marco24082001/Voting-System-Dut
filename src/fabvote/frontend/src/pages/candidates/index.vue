@@ -48,7 +48,6 @@
           <el-form-item prop="biography" label="Biography">
             <el-input v-model="model.biography" placeholder="Input biography">
             </el-input>
-            <!-- <QuillEditor v-model:content="this.model.biography"></QuillEditor> -->
           </el-form-item>
           <el-form-item prop="positionId" label="Position">
             <el-select v-model="model.positionId" placeholder="please select position">
@@ -89,10 +88,8 @@ import CandidateService from "@/services/candidate/candidate.services";
 import PositionService from "@/services/position/position.services";
 import CommonService from '@/services/common/common.services';
 import { timeConverter } from "@/utils/dateTimeUtils";
-import { QuillEditor } from "@vueup/vue-quill";
 import { uploadImage } from "@/utils/cloudinaryUtils";
 import { ElMessage } from 'element-plus'
-import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import { Plus } from '@element-plus/icons-vue'
 const tableColumns = ["Id", "Name", "Salary", "Country", "City"];
 const tableData = [
@@ -170,7 +167,6 @@ const tableData = [
 
 export default {
   components: {
-    QuillEditor,
     Plus
   },
   data() {
@@ -258,7 +254,7 @@ export default {
       this.dialogFormVisible = true;
       this.editId = row.id;
       this.model.name = row.name;
-      this.model.biography = JSON.stringify(row.biography);
+      this.model.biography = row.biography;
       this.model.positionId = row.position.id;
       this.model.imageUrl = row.imageUrl;
     },
@@ -277,9 +273,8 @@ export default {
       // await this.$refs.form 
       await this.$refs.form.validate(async (valid, fields) => {
         if (valid) {
-          this.model.biography = JSON.stringify(this.model.biography);
+          this.model.biography = this.model.biography;
           if (this.rawFileImage !== "") {
-            console.log('upload image')
             try {
               const { url } = await uploadImage(this.rawFileImage);
               this.model.imageUrl = url;
@@ -313,7 +308,7 @@ export default {
       await this.$refs.form.validate(async (valid, fields) => {
         if (valid) {
           this.$store.commit("animation/setFullscreenLoading", true);
-          this.model.biography = JSON.stringify(this.model.biography);
+          this.model.biography = this.model.biography;
           const res = await CandidateService.create(this.model);
           this.$store.commit("animation/setFullscreenLoading", false);
           if (!res.data.error) {
@@ -336,7 +331,6 @@ export default {
         candidate.Value.position = position;
       }
       this.dialogHistoryVisible = true;
-      console.log(this.candidateHistory);
     },
     closedialogForm: function () {
       this.$refs.form.resetFields();

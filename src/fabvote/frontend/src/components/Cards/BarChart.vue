@@ -1,6 +1,7 @@
 <template>
 	<div>
-		<Bar :position="position" :votes="votes" :candidates="candidates"  :options="chartOptionsDefault" :data="chartData" />
+		<Bar :position="position" :votes="votes" :candidates="candidates" :options="chartOptionsDefault"
+			:data="chartData" />
 	</div>
 </template>
 
@@ -79,14 +80,14 @@ export default {
 		this.loadDataChart();
 	},
 	watch: {
-		votes: function(newVal, oldVal) {
+		votes: function (newVal, oldVal) {
 			this.loadDataChart();
 		}
 	},
 	methods: {
-		loadDataChart: async function() {
+		loadDataChart: async function () {
 			const candidatesOfPosition = this.candidates.filter((data) => data.position.id === this.position.id)
-			const newLabels = await candidatesOfPosition.map(function(candidate) {
+			let newLabels = await candidatesOfPosition.map(function (candidate) {
 				return candidate.name;
 			})
 			let newData = [];
@@ -94,7 +95,22 @@ export default {
 				let totalVotes = await this.votes.filter((vote) => vote.ownerId === candidate.id).length;
 				newData.push(totalVotes);
 			}
-			const newDatasets =  [{...this.chartDataDefault.datasets[0], label: this.position.name, data: newData}]
+			// sort two list
+			let list_combine = [];
+			for (let i = 0; i < newLabels.length; i++)
+				list_combine.push({ 'name': newLabels[i], 'vote': newData[i] });
+			list_combine.sort(function (a, b) {
+				return ((a.vote > b.vote) ? -1 : ((a.vote == b.vote) ? 0 : 1));
+				//Sort could be modified to, for example, sort on the age 
+				// if the name is the same. See Bonus section below
+			});
+
+			for (var k = 0; k < list_combine.length; k++) {
+				newLabels[k] = list_combine[k].name;
+				newData[k] = list_combine[k].vote;
+			}
+
+			const newDatasets = [{ ...this.chartDataDefault.datasets[0], label: this.position.name, data: newData }]
 			this.chartData = {
 				...this.chartData,
 				labels: newLabels,

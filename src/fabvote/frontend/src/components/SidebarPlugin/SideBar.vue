@@ -151,9 +151,6 @@ export default {
       });
     },
     addLink(link) {
-
-      // console.log(this.$slots)
-      // const index = this.$slots.links.indexOf(link.$vnode);
       this.links.splice(1, 0, link);
     },
     removeLink(link) {

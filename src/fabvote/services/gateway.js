@@ -1,3 +1,5 @@
+
+
 const { Gateway, Wallets } = require('fabric-network');
 const path = require('path');
 const fs = require('fs');
@@ -12,14 +14,14 @@ async function initGateway () {
     const walletPath = path.join(process.cwd(), 'wallet');
     const wallet = await Wallets.newFileSystemWallet(walletPath);  
     // Check to see if we've already enrolled the user.
-    const identity = await wallet.get('appUser');
+    const identity = await wallet.get('appUserOrg1');
     if (!identity) {
         console.log('An identity for the user "appUser" does not exist in the wallet');
         console.log('Run the registerUser.js application before retrying');
         return;
     }
       // Create a new gateway for connecting to our peer node.
-    await gateway.connect(ccp, { wallet, identity: 'appUser', discovery: { enabled: true, asLocalhost: true } });
+    await gateway.connect(ccp, { wallet, identity: 'appUserOrg1', discovery: { enabled: true, asLocalhost: true } });
   } catch (err) {
     console.log(err);
   }

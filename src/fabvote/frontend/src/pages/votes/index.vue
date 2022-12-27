@@ -85,7 +85,6 @@ export default {
         vote.Value.position = position;
         vote.Value.owner = candidate;
       }
-      console.log(this.voteHistory);
       this.dialogHistoryVisible = true;
     },
   }

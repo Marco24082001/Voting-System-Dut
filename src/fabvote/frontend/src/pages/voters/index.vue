@@ -135,7 +135,6 @@ export default {
       if (!res.data.error) {
         this.votersData.rows = res.data.response;
       }
-      console.log(res.data.response); 
     },
 
     handleCreate: async function () {
@@ -149,7 +148,6 @@ export default {
       
       console.log(res.data.error)
       if (!res.data.error) {
-        console.log(res)
         this.handleGetAll();
         this.closedialogForm();
       }
@@ -164,7 +162,6 @@ export default {
       }
       this.$store.commit("animation/setFullscreenLoading", true);
       const res = await VoterService.edit({ id:this.editId, ...this.model});
-      console.log(res);
       if (!res.data.error) {
         this.handleGetAll();
         this.closedialogForm();

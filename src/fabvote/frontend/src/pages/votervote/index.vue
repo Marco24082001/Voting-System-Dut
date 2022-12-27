@@ -94,7 +94,6 @@ export default {
         this.start_date = new Date(this.election.start_date)
         this.end_date = new Date(this.election.start_date)
         this.end_date.setMinutes(this.end_date.getMinutes() + this.election.duration);
-        console.log(this.start_date.toLocaleString(), this.end_date.toLocaleString());
         this.ballots = (await BallotServices.getAllBallots()).data.response;
         for (const ballot of this.ballots) {
             ballot.voted_candidates = []

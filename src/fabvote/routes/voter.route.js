@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const controller= require('../controllers/voter.controller');
+const { validateToken } = require("../middlewares/authmiddleware");
 
-// router.post('/create', controller.createVoter);
-// router.get('/get/:id', controller.get);
-router.get('', controller.getAll);
-router.post('', controller.createVoter);
-router.delete('/:id', controller.delete)
-router.put('/:id', controller.edit);
+router.get('', validateToken, controller.getAll);
+router.post('', validateToken, controller.createVoter);
+router.delete('/:id', validateToken, controller.delete)
+router.put('/:id', validateToken, controller.edit);
 router.get('/verify', controller.verify);
 
 module.exports = router;

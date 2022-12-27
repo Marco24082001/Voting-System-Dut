@@ -92,7 +92,6 @@ export default {
       return false;
     },
     async submit() {
-      console.log(this.email, this.token);
       let valid = await this.validatePassword();
       if (!valid) {
         return;

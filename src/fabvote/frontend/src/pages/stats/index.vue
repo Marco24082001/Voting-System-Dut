@@ -26,7 +26,7 @@
 
 		<!--Charts-->
 		<div class="row">
-			<div v-for="(position, index) in positionsData" class="col-12 mt-5" :key="index">
+			<div v-for="(position, index) in positionsData" class="col-6 mt-5" :key="index">
 				<BarChart :position="position" :votes="votesData" :candidates="candidatesData" />
 			</div>
 

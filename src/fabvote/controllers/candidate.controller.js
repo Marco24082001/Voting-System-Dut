@@ -1,13 +1,13 @@
-const { gateway } = require('../services/gateway')
 const { v4:uuidv4 } = require('uuid');
+const { Contract } = require("../services/contract");
+const ContractService = new Contract();
+ContractService.init();
 
 module.exports.createCandidate = async function(req, res) {
   try {
     const id = uuidv4();
     const { name, biography, positionId, imageUrl} = req.body;
-    const network = await gateway.getNetwork('fabvotechannel');
-    const contract = network.getContract('fabvote');
-    await contract.submitTransaction('createCandidate', id, name, positionId, biography, imageUrl);
+    await ContractService.logic_transaction(req.user.docType, 'createCandidate', id, name, positionId, biography, imageUrl);
     console.log('Transaction has been submitted');
     return res.send('Transaction has been submitted');
   } catch (error){
@@ -17,10 +17,8 @@ module.exports.createCandidate = async function(req, res) {
 
 module.exports.get = async function(req, res) {
   try {
-    const network = await gateway.getNetwork('fabvotechannel');
-    const contract = network.getContract('fabvote');
     const candidateId = req.params.id;
-    result = JSON.parse(await contract.evaluateTransaction('readAsset', candidateId));
+    result = JSON.parse(await ContractService.query_transaction(req.user.docType, 'readAsset', candidateId));
     return res.status(200).json({ response: result })
   } catch (error) {
     return res.json({ error : error });
@@ -29,11 +27,9 @@ module.exports.get = async function(req, res) {
 
 module.exports.getAll = async function(req, res) {
   try {
-    const network = await gateway.getNetwork('fabvotechannel');
-    const contract = network.getContract('fabvote');
-    const results = JSON.parse(await contract.evaluateTransaction('readAllCandidates'));
+    const results = JSON.parse(await ContractService.query_transaction(req.user.docType, 'readAllCandidates'));
     for (const candidate of results) {
-      const position = JSON.parse(await contract.evaluateTransaction('readAsset', candidate.positionId));
+      const position = JSON.parse(await ContractService.query_transaction(req.user.docType, 'readAsset', candidate.positionId));
       candidate.position = position;
     }
     return res.status(200).json({ response: results });
@@ -44,10 +40,8 @@ module.exports.getAll = async function(req, res) {
 
 module.exports.edit = async function(req, res) {
   try {
-    const network = await gateway.getNetwork("fabvotechannel");
-    const contract = network.getContract("fabvote");
     const { id, name, positionId, biography, imageUrl} = req.body;
-    await contract.submitTransaction("editCandidate", id, name, positionId, biography, imageUrl);
+    await ContractService.logic_transaction(req.user.docType, "editCandidate", id, name, positionId, biography, imageUrl);
     return res.status(200).json({response: "success"})
   } catch (error) {
     console.log(error);
@@ -57,10 +51,8 @@ module.exports.edit = async function(req, res) {
 
 module.exports.delete = async function(req, res) {
   try {
-    const network = await gateway.getNetwork("fabvotechannel");
-    const contract = network.getContract("fabvote");
     const id = req.params.id;
-    await contract.submitTransaction("deleteAsset", id);
+    await ContractService.logic_transaction(req.user.docType, "deleteAsset", id);
     return res.status(200).json({ response: "success" });
   } catch (error) {
     return res.json({ error: error });

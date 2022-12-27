@@ -6,12 +6,12 @@ class CandidateService extends BaseService {
     }
 
     async create(data) {
-        return await this.request().post(`/${this.entity}/create`, data);
+        return await this.request().post(`/${this.entity}`, data);
     }
 
     async getbyId(id) {
         try {
-            return await this.request().get(`/${this.entity}/get/${id}`);
+            return await this.request().get(`/${this.entity}/${id}`);
         } catch (e) {
             console.log(e);
         }
@@ -19,7 +19,7 @@ class CandidateService extends BaseService {
 
     async getAll() {
         try {
-            return await this.request().get(`/${this.entity}/getAll`);
+            return await this.request().get(`/${this.entity}`);
         } catch (e) {
             console.log(e);
         }
@@ -27,7 +27,7 @@ class CandidateService extends BaseService {
 
     async edit(data) {
         try {
-            return await this.request().put(`/${this.entity}/edit`, data);
+            return await this.request().put(`/${this.entity}`, data);
         } catch (e) {
             console.log(e);
         }
@@ -35,7 +35,7 @@ class CandidateService extends BaseService {
 
     async delete(id) {
         try {
-            return await this.request().delete(`/${this.entity}/delete/${id}`);
+            return await this.request().delete(`/${this.entity}/${id}`);
         } catch (e) {
             console.log(e);
         }

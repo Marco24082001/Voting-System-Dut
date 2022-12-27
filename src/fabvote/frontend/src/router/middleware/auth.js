@@ -6,7 +6,6 @@ export function Authenticate({ to, next, router, store }) {
 }
 
 export function AuthorizeAdmin({ to, next, router, store }) {
-    console.log(store.state.user.currentUser)
     if (store.state.user.currentUser.docType === "admin") {
         return next();
     }else if(store.state.user.currentUser.docType === "voter") {

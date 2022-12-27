@@ -55,8 +55,6 @@ export default {
     },
     async created() {
         this.ballots = (await BallotServices.getAllBallots()).data.response;
-        console.log(this.ballots)
-        console.log('thanhvi')
     }
 }
 </script>

@@ -27,7 +27,6 @@ import ElectionService from "@/services/election/election.services";
 export default {
 	async created() {
 		const election = (await ElectionService.getAll()).data.response;
-		console.log(election);
 		this.model = {...election};
 	},
 	data() {

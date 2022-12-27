@@ -14,8 +14,9 @@ CC_SRC_LANGUAGE=${1:-"javascript"}
 CC_SRC_LANGUAGE=`echo "$CC_SRC_LANGUAGE" | tr [:upper:] [:lower:]`
 
 CC_FABVOTE_SRC_PATH="../chaincode/fabvote/"
-# CC_BALLOT_SRC_PATH="../chaincode/ballot/"
-
+ENDORSEMENT_POLICIES="AND\('Org1MSP.peer', 'Org2MSP.peer'\)"
+# echo $ENDORSEMENT_POLICIES
+echo  $ENDORSEMENT_POLICIES
 # clean out any old identites in the wallets
 rm -rf wallet/*
 
@@ -23,12 +24,10 @@ rm -rf wallet/*
 pushd ../test-network
 ./network.sh down
 ./network.sh up createChannel -c fabvotechannel -ca -s couchdb
-# ./network.sh createChannel -c candidatechannel
-# ./network.sh createChannel -c ballotchannel
 ./network.sh deployCC -c fabvotechannel -ccn fabvote -ccv 1 -cci initLedger -ccl ${CC_SRC_LANGUAGE} -ccp ${CC_FABVOTE_SRC_PATH}
-# ./network.sh deployCC -c candidatechannel -ccn candidate -ccv 1 -cci initLedger -ccl ${CC_SRC_LANGUAGE} -ccp ${CC_CANDIDATE_SRC_PATH}
-# ./network.sh deployCC -c ballotchannel -ccn ballot -ccv 1 -cci initLedger -ccl ${CC_SRC_LANGUAGE} -ccp ${CC_BALLOT_SRC_PATH}
 popd
+
+./initialUser.sh
 
 cat <<EOF
 

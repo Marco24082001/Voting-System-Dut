@@ -142,7 +142,6 @@ export default {
       if (!res.data.error) {
         this.positionsData.rows = res.data.response;
       }
-      console.log(res.data.response);
     },
     handleEdit: async function () {
       let valid = await this.$refs.form.validate();

@@ -23,11 +23,11 @@ const routes = [
     path: "/login",
     name: "login",
     component: Login,
-    // meta: {
-    //   middleware: [
-    //     AuthorizeGuest
-    //   ]
-    // }
+    meta: {
+      middleware: [
+        AuthorizeGuest
+      ]
+    }
   },
   {
     path: "/verify",

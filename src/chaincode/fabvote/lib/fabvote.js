@@ -82,7 +82,7 @@ class Fabvote extends Contract {
             },
             {
                 id: 'CANDIDATEdab39660-856d-40c1-a32d-a6707cb76fca',
-                name: 'Phạm Như Hiệp',
+                name: 'Nguyễn Thành Thắng',
                 positionId: 'POSITION05c4fe86-6269-11ed-9b6a-0242ac120002',
                 biography: 'Tỉnh ủy viên, Giám đốc Bệnh viện Trung ương Huế, Giám đốc Trung tâm Ung bướu, Trưởng khoa Ngoại nhi - Cấp cứu bụng.',
                 imageUrl: 'http://dbqh.thuathienhue.gov.vn/Portals/0/Users/002/02/2/PhamNhuHiep.JPG',

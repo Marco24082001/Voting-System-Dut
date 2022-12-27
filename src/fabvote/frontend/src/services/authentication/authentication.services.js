@@ -9,6 +9,7 @@ class AuthenticationService extends BaseService {
 
     async login(data) {
         const res = await this.request().post(`/${this.entity}/login`, data);
+        console.log(res);
         if (!res.data.error) {
             storeTokenToVuex(res.data);
             const currentUser = (await this.getCurrentUser()).data.response;
